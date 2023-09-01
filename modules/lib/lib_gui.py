@@ -4,11 +4,6 @@ from lib_pass_gen import PasswordGenerator
 from utils import copy_to_clipboard
 
 
-def is_input_correct(user_input):
-    data = user_input.get()
-    return data.isdigit() and int(data) in range(1, 257)
-
-
 # This class allows us to create entries with placeholders so it can provide more detail to use wihout additional labels.
 class EntryWithPlaceholder(tk.Entry):
     def __init__(self, master=None, placeholder="PLACEHOLDER", textvariable=None, color="grey"):
@@ -49,12 +44,16 @@ def password_gen_top_level(main_window):
     user_input = tk.StringVar()
     password_label = tk.Label(password_generator_window, text="Provide password length:", font=font)
 
-    # TODO: replace packs with grids, and print with log function 
+    # TODO: packs -> grids, add log function in utils.py 
 
     password_label.pack()
 
     numeric_entry = EntryWithPlaceholder(password_generator_window, "Only numbers bigger than 1", textvariable=user_input)
     numeric_entry.pack()
+
+    def is_input_correct(user_input):
+        data = user_input.get()
+        return data.isdigit() and int(data) in range(1, 257)
 
     generator = PasswordGenerator()
     def on_submit():
