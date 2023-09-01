@@ -4,7 +4,7 @@ from lib_pass_gen import PasswordGenerator
 from utils import copy_to_clipboard
 
 
-def is_number(user_input):
+def is_correct_input(user_input):
     data = user_input.get()
     return data.isdigit() and int(data) in range(1, 257)
 
@@ -40,7 +40,6 @@ class EntryWithPlaceholder(tk.Entry):
             self.put_placeholder()
 
 
-root = tk.Tk()
 # Functions will be invoked after clicking button in main PixelToolkitFile
 def password_gen_top_level(main_window):
     font = ("Tahoma", 15)
@@ -49,6 +48,9 @@ def password_gen_top_level(main_window):
 
     user_input = tk.StringVar()
     password_label = tk.Label(password_generator_window, text="Provide password length:", font=font)
+
+    # TODO: replace packs with grids, and print with log function 
+
     password_label.pack()
 
     numeric_entry = EntryWithPlaceholder(password_generator_window, "Only numbers bigger than 1", textvariable=user_input)
@@ -56,7 +58,7 @@ def password_gen_top_level(main_window):
 
     generator = PasswordGenerator()
     def on_submit():
-        if is_number(user_input):
+        if is_correct_input(user_input):
             # Set the label text to the password generated 
             password = generator.gen(int(user_input.get()))
             password_label.config(text=f"Password generated: {password}")
@@ -67,9 +69,3 @@ def password_gen_top_level(main_window):
 
     submit_button = tk.Button(password_generator_window, text="Submit", command=on_submit)
     submit_button.pack()
-
-
-test = tk.Button(root, text="test", command=lambda: password_gen_top_level(root))
-test.pack()
-
-root.mainloop()
