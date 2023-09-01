@@ -1,7 +1,13 @@
 import tkinter as tk
-import pyperclip
 from tkinter import messagebox
 from lib_pass_gen import PasswordGenerator
+from utils import copy_to_clipboard
+
+
+def is_number(user_input):
+    data = user_input.get()
+    return data.isdigit() and int(data) in range(1, 257)
+
 
 # This class allows us to create entries with placeholders so it can provide more detail to use wihout additional labels.
 class EntryWithPlaceholder(tk.Entry):
@@ -15,8 +21,8 @@ class EntryWithPlaceholder(tk.Entry):
         if textvariable:
             self.configure(textvariable=textvariable)
 
-        self.bind("<FocusIn>", self.foc_in)
-        self.bind("<FocusOut>", self.foc_out)
+        self.bind("<FocusIn>", self.focus_in)
+        self.bind("<FocusOut>", self.focus_out)
 
         self.put_placeholder()
 
@@ -24,30 +30,17 @@ class EntryWithPlaceholder(tk.Entry):
         self.insert(0, self.placeholder)
         self["fg"] = self.placeholder_color
 
-
-
-    def foc_in(self, *args):
+    def focus_in(self, *args):
         if self["fg"] == self.placeholder_color:
             self.delete("0", "end")
             self["fg"] = self.default_fg_color
 
-    def foc_out(self, *args):
+    def focus_out(self, *args):
         if not self.get():
             self.put_placeholder()
 
 
-# I assume user will need to type in a number in few modules so this creating entry with validation if input is stricly number may be handy
-def is_number(user_input):
-    if user_input.get().isdigit():
-        return True
-    else:
-        return False
-
-
-def copy_to_clipboard(string_to_copy):
-    pyperclip.copy(string_to_copy)
-
-
+root = tk.Tk()
 # Functions will be invoked after clicking button in main PixelToolkitFile
 def password_gen_top_level(main_window):
     font = ("Tahoma", 15)
@@ -61,14 +54,12 @@ def password_gen_top_level(main_window):
     numeric_entry = EntryWithPlaceholder(password_generator_window, "Only numbers bigger than 1", textvariable=user_input)
     numeric_entry.pack()
 
+    generator = PasswordGenerator()
     def on_submit():
-        global is_valid
-        
         if is_number(user_input):
             # Set the label text to the password generated 
-            password = PasswordGenerator().gen(int(user_input.get()))
+            password = generator.gen(int(user_input.get()))
             password_label.config(text=f"Password generated: {password}")
-            print(type(password))
             copy_button = tk.Button(password_generator_window, text='Copy to clipboard', command=lambda: copy_to_clipboard(password))
             copy_button.pack()
         else:
@@ -77,3 +68,8 @@ def password_gen_top_level(main_window):
     submit_button = tk.Button(password_generator_window, text="Submit", command=on_submit)
     submit_button.pack()
 
+
+test = tk.Button(root, text="test", command=lambda: password_gen_top_level(root))
+test.pack()
+
+root.mainloop()
