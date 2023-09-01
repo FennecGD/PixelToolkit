@@ -44,7 +44,7 @@ def password_gen_top_level(main_window):
     user_input = tk.StringVar()
     password_label = tk.Label(password_generator_window, text="Provide password length:", font=font)
 
-    # TODO: packs -> grids, add log function in utils.py 
+    # TODO: packs -> grids
 
     password_label.pack()
 
