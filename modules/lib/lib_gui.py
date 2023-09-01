@@ -4,7 +4,7 @@ from lib_pass_gen import PasswordGenerator
 from utils import copy_to_clipboard
 
 
-def is_correct_input(user_input):
+def is_input_correct(user_input):
     data = user_input.get()
     return data.isdigit() and int(data) in range(1, 257)
 
@@ -58,7 +58,7 @@ def password_gen_top_level(main_window):
 
     generator = PasswordGenerator()
     def on_submit():
-        if is_correct_input(user_input):
+        if is_input_correct(user_input):
             # Set the label text to the password generated 
             password = generator.gen(int(user_input.get()))
             password_label.config(text=f"Password generated: {password}")
