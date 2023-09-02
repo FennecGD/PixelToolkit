@@ -70,24 +70,23 @@ def password_gen_top_level(main_window):
 
     generator = PasswordGenerator()
 
+    copy_button = tk.Button(
+        password_generator_window,
+        text="Copy"
+    )
     def on_submit():
         if is_input_correct(user_input):
             # Set the label text to the password generated
             password = generator.gen(int(user_input.get()))
             password_label.config(text=f"Password generated: {password}")
-            global copy_button
-            copy_button = tk.Button(
-                password_generator_window,
-                text="Copy",
-                command=lambda: copy_to_clipboard(password),
-            )
+            copy_button.config(command=lambda: copy_to_clipboard(password))
             copy_button.grid(row=3, column=2)
             submit_button.grid(row=3, column=0)
 
         else:
             password_label.config(text="Invalid input provided!")
             # We shouldn't be able to copy if input was incorrect
-            copy_button.destroy()
+            copy_button.grid_remove()
             submit_button.grid(row=3, column=1)
 
     submit_button = tk.Button(
