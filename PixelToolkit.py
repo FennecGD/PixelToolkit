@@ -1,8 +1,6 @@
 #!/bin/python3
 
-# Password Generator (Part of the PixelToolkit project)
-
-from lib.lib_pass_gen import PasswordGenerator
+from lib.pass_gen import PasswordGenerator
 import argparse
 import sys
 
@@ -17,7 +15,15 @@ if __name__ == "__main__":
     parser.add_argument("--length", type=int, help="Length of the password", default=10)
     args = parser.parse_args()
 
-    if len(sys.argv) == 1:
-        print("GUI")
+    if len(sys.argv) == 1:  # If no arguments passed -> GUI
+        from lib.gui import password_gen_top_level
+        import tkinter as tk
+
+        root = tk.Tk()
+
+        password_gen = tk.Button(root, text="Password Generator", command=lambda: password_gen_top_level(root))
+        password_gen.pack()
+
+        root.mainloop()
     else:
         generate_password(args.length)
