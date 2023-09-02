@@ -46,4 +46,4 @@ class LogUrgency:
 def log(string_to_log, urgency=LogUrgency.INFO):
     import datetime
     timestamp = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-    print(f"{Color.GRAY}[{timestamp}] {Color.GRAY}[{urgency}{Color.GRAY}]{Color.WHITE} {string_to_log}")
+    print(f"{Color.GRAY}[{timestamp}] [{urgency}{Color.GRAY}]{Color.WHITE} {string_to_log}")
