@@ -74,6 +74,7 @@ def password_gen_top_level(main_window):
         password_generator_window,
         text="Copy"
     )
+
     def on_submit():
         if is_input_correct(user_input):
             # Set the label text to the password generated
