@@ -12,7 +12,7 @@ def generate_password(length):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Password Generator", epilog="Part of the PixelToolkit project")
-    parser.add_argument("--length", type=int, help="Length of the password", default=10)
+    parser.add_argument("--length", "-l", type=int, help="Length of the password", default=10)
     args = parser.parse_args()
 
     if len(sys.argv) == 1:  # If no arguments passed -> GUI
