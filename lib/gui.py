@@ -1,10 +1,10 @@
 import tkinter as tk
-from tkinter import messagebox
-from lib_pass_gen import PasswordGenerator
-from utils import copy_to_clipboard
+from lib.pass_gen import PasswordGenerator
+from lib.utils import copy_to_clipboard
 
 
-# This class allows us to create entries with placeholders so it can provide more detail to use wihout additional labels.
+# This class allows us to create entries with placeholders
+# so it can provide more detail to use wihout additional labels.
 class EntryWithPlaceholder(tk.Entry):
     def __init__(self, master=None, placeholder="PLACEHOLDER", textvariable=None, color="grey"):
         super().__init__(master)
@@ -48,7 +48,8 @@ def password_gen_top_level(main_window):
 
     password_label.pack()
 
-    numeric_entry = EntryWithPlaceholder(password_generator_window, "Only numbers bigger than 1", textvariable=user_input)
+    numeric_entry = EntryWithPlaceholder(
+        password_generator_window, "Only numbers bigger than 1", textvariable=user_input)
     numeric_entry.pack()
 
     def is_input_correct(user_input):
@@ -56,12 +57,14 @@ def password_gen_top_level(main_window):
         return data.isdigit() and int(data) in range(1, 257)
 
     generator = PasswordGenerator()
+
     def on_submit():
         if is_input_correct(user_input):
-            # Set the label text to the password generated 
+            # Set the label text to the password generated
             password = generator.gen(int(user_input.get()))
             password_label.config(text=f"Password generated: {password}")
-            copy_button = tk.Button(password_generator_window, text='Copy to clipboard', command=lambda: copy_to_clipboard(password))
+            copy_button = tk.Button(password_generator_window, text='Copy to clipboard',
+                                    command=lambda: copy_to_clipboard(password))
             copy_button.pack()
         else:
             password_label.config(text="Invalid input provided!")  # Update the label text
