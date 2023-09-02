@@ -16,14 +16,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if len(sys.argv) == 1:  # If no arguments passed -> GUI
-        from lib.gui import password_gen_top_level
-        import tkinter as tk
+        from lib.gui import main_window_generator
+        main_window_generator()
 
-        root = tk.Tk()
-
-        password_gen = tk.Button(root, text="Password Generator", command=lambda: password_gen_top_level(root))
-        password_gen.pack()
-
-        root.mainloop()
     else:
         generate_password(args.length)
