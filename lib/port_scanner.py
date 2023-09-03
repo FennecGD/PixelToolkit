@@ -43,7 +43,3 @@ def manage_port_scan(host, ports):
         queue.put(port)
 
     queue.join()
-
-
-
-
