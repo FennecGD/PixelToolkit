@@ -1,6 +1,5 @@
 import queue
 import socket
-import argparse
 from threading import Thread, Lock
 from queue import Queue
 
