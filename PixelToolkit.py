@@ -1,5 +1,4 @@
 #!/bin/python3
-
 from lib.pass_gen import PasswordGenerator
 import argparse
 import sys
@@ -26,14 +25,11 @@ if __name__ == "__main__":
             print("Password: " + generator.gen(args.length))
 
         elif args.subcommand == "port-scan":
-            print(args)
-            from lib.port_scanner import manage_port_scan
+            from lib.port_scanner import start_port_scan
             host, port_range = args.host, args.port_range
 
             start_port, end_port = port_range.split("-")
             start_port, end_port = int(start_port), int(end_port)
 
             ports = [port for port in range(start_port, end_port)]
-            manage_port_scan(host, ports)
-
-
+            start_port_scan(host, ports)

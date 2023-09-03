@@ -1,37 +1,34 @@
-import queue
 import socket
-from threading import Thread, Lock
+from threading import Thread
 from queue import Queue
+import multiprocessing
 
-N_THREADS = 150
+N_THREADS = multiprocessing.cpu_count()
 
 queue = Queue()
-print_lock = Lock()
 
 def scan_port(host, port):
     try:
         sock = socket.socket()
         sock.connect((host, port))
+        print(f"{host}\t{port:5} is open")
     except:
         pass
-    else:
-        with print_lock:
-            print(f"{host:15}:{port:5} is open")
     finally:
         sock.close()
 
 
 def scan_thread(host):
     global queue
+    # TODO reimplement this loop with multiple ranges and threads
     while True:
         port_number = queue.get()
         scan_port(host, port_number)
         queue.task_done()
 
 
-def manage_port_scan(host, ports):
+def start_port_scan(host, ports):
     global queue
-    print("test")
     for thread in range(N_THREADS):
         thread = Thread(target=scan_thread, args=(host,))
         # if daemon is True that thread will end when the main threadends
