@@ -14,7 +14,7 @@ if __name__ == "__main__":
     port_scan = subparsers.add_parser("port-scan", help="Port Scanner")
     port_scan.add_argument("--host", type=str, help="Host to scan", default="127.0.0.1")
     port_scan.add_argument("--ports", "-p", type=str, dest="port_range", default="1-65535", help="Port range to scan. Default is from 1 to 65535 (every port)")
-    port_scan.add_argument("--threads", "-t", type=int, dest="threads", default=multiprocessing.cpu_count(), help="Threads that will be used for scanning the ports")
+    port_scan.add_argument("--threads", "-t", type=int, dest="threads", default=multiprocessing.cpu_count(), help="Amount of threads that will be used for port scanning")
 
 
     args = parser.parse_args()
