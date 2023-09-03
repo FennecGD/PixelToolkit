@@ -1,9 +1,6 @@
 import socket
 from threading import Thread
 from queue import Queue
-import multiprocessing
-
-N_THREADS = multiprocessing.cpu_count()
 
 queue = Queue()
 
@@ -27,9 +24,9 @@ def scan_thread(host):
         queue.task_done()
 
 
-def start_port_scan(host, ports):
+def start_port_scan(host, ports, threads):
     global queue
-    for thread in range(N_THREADS):
+    for thread in range(threads):
         thread = Thread(target=scan_thread, args=(host,))
         # if daemon is True that thread will end when the main threadends
         thread.daemon = True

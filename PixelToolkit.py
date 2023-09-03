@@ -2,7 +2,7 @@
 from lib.pass_gen import PasswordGenerator
 import argparse
 import sys
-
+import multiprocessing
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="PixelToolkit - Collection of computer tools")
@@ -14,6 +14,8 @@ if __name__ == "__main__":
     port_scan = subparsers.add_parser("port-scan", help="Port Scanner")
     port_scan.add_argument("--host", type=str, help="Host to scan", default="127.0.0.1")
     port_scan.add_argument("--ports", "-p", type=str, dest="port_range", default="1-65535", help="Port range to scan. Default is from 1 to 65535 (every port)")
+    port_scan.add_argument("--threads", "-t", type=int, dest="threads", default=multiprocessing.cpu_count(), help="Threads that will be used for scanning the ports")
+
 
     args = parser.parse_args()
     if len(sys.argv) == 1:  # If no arguments passed -> GUI
@@ -27,9 +29,10 @@ if __name__ == "__main__":
         elif args.subcommand == "port-scan":
             from lib.port_scanner import start_port_scan
             host, port_range = args.host, args.port_range
+            threads = args.threads
 
             start_port, end_port = port_range.split("-")
             start_port, end_port = int(start_port), int(end_port)
 
             ports = [port for port in range(start_port, end_port)]
-            start_port_scan(host, ports)
+            start_port_scan(host, ports, threads)
