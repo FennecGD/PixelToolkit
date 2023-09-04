@@ -39,12 +39,13 @@ class EntryWithPlaceholder(tk.Entry):
         if not self.get():
             self.put_placeholder()
 
+default_bg_color = "#222"
 
 # Functions will be invoked after clicking button in main PixelToolkitFile
 def make_password_generator(main_window):
     font = ("Tahoma", 15)
     password_generator_window = tk.Toplevel(
-        main_window, bg="#222", width=600, height=600
+        main_window, bg=default_bg_color, width=600, height=600
     )
     password_generator_window.resizable(False, False)
     password_generator_window.title("Password Generator")
@@ -55,7 +56,7 @@ def make_password_generator(main_window):
         text="Provide password length:",
         font=font,
         fg="#EEE",
-        bg="#222",
+        bg=default_bg_color,
         padx=10,
         pady=10,
         wraplength=250,
@@ -97,24 +98,20 @@ def make_password_generator(main_window):
 
 
 def make_port_scan(main_window):
-    font = ""
     width = 800
     height = 600
-    port_scan_window = tk.Toplevel(main_window, bg="#222", width=width, height=height)
+    port_scan_window = tk.Toplevel(main_window, bg=default_bg_color, width=width, height=height)
     port_scan_window.resizable(False, False)
     port_scan_window.title("Port Scanner")
 
     port_scan_frame = tk.Frame(port_scan_window)
     port_scan_frame.pack(fill=tk.BOTH, expand=True)
 
-    host = tk.StringVar()
-    host.set("127.0.0.1")
-    port_range = tk.StringVar()
-    port_range.set("1-65535")
-    threads = tk.StringVar()
-    threads.set(multiprocessing.cpu_count())
+    host = tk.StringVar(value="127.0.0.1")
+    port_range = tk.StringVar(value="1-65535")
+    threads = tk.StringVar(value=multiprocessing.cpu_count())
 
-    scan_label = tk.Label(port_scan_frame, text="Select scanning options", bg="#222", fg="#FFF")
+    scan_label = tk.Label(port_scan_frame, text="Select scanning options", bg=default_bg_color, fg="#FFF")
     scan_label.pack(fill=tk.X, expand=True)
 
     def validate_input(host_address, ports_range, n_threads):
@@ -122,35 +119,28 @@ def make_port_scan(main_window):
         ports_range = ports_range.replace("default: ", "")
         n_threads = n_threads.replace("default: ", "")
         import re
-
-        regex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
+        regex = r"^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$"
         ports = ports_range.split("-")
 
         lower_port = ports[0]
         upper_port = ports[1]
-        if not re.search(regex, host_address):
+        if not re.match(regex, host_address):
             messagebox.showerror("Error", "Invalid host adress")
-        elif not len(ports) == 2:
+        elif len(ports) != 2 or\
+            (lower_port.isdigit() == False and int(lower_port) > 0) or\
+            (upper_port.isdigit() == False and int(upper_port) > 0) or \
+            (int(upper_port) < int(lower_port)) or\
+            (int(lower_port) > 65535 or int(upper_port) > 65535):
             messagebox.showerror("Error", "Invalid port range")
-        elif not lower_port.isdigit() and int(lower_port) > 0:
-            messagebox.showerror("Error", "Invalid port range")
-        elif not upper_port.isdigit() and int(upper_port) > 0:
-            messagebox.showerror("Error", "Invalid port range")
-        elif int(upper_port) < int(lower_port):
-            messagebox.showerror("Error", "Invalid port range")
-        elif isinstance(n_threads, str):
+        elif n_threads.isdigit() == False or int(n_threads) < 1:
             messagebox.showerror("Error", "Invalid thread number")
-        elif not n_threads.isdigit() and int(n_threads) > 0:
-            messagebox.showerror("Error", "Invalid thread number")
+
         else:
             result = scan_port_range(host_address, int(lower_port), int(upper_port), int(n_threads))
-            add_result_label(result)
-
-    def add_result_label(result):
-        if len(result) == 0:
-            result_label.config(text="There were not any open ports on specified range")
-        else:
-            result_label.config(text="\n".join(result))
+            if len(result) == 0:
+                result_label.config(text="There were not any open ports on specified range")
+            else:
+                result_label.config(text="Open ports for specified host\n" + "\n".join(list(map(lambda x: str(x), result))))
 
 
     entries = [
@@ -166,8 +156,8 @@ def make_port_scan(main_window):
             command=lambda: validate_input(host.get(), port_range.get(), threads.get()),
         ),
     ]
-    for i in range(len(entries)):
-        entries[i].pack(fill=tk.X, expand=True)
+    for entry in entries:
+        entry.pack(fill=tk.X, expand=True)
 
     result_label = tk.Label(port_scan_frame)
     result_label.pack(fill=tk.X, expand=True)

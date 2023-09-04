@@ -1,34 +1,26 @@
 import socket
 import threading
-from lib.utils import Color
 
 
-def scan_port(host, port, results):
+def scan_port(host, port) -> bool:
     try:
         sock = socket.socket()
         sock.connect((host, port))
-        RESET = Color.RESET
-        GREEN = Color.GREEN
-        GRAY = Color.GRAY
-        BLUE = Color.BLUE
-        print(
-            f"[{GREEN}+{RESET}] {GRAY}({host}){RESET}\tOpen port: {BLUE}{port}{RESET}"
-        )
-        current = host + "\t" + "Open port: " + str(port)
-        results.append(current)
-    except:
-        pass
-    finally:
         sock.close()
+        return True
+    except:
+        return False
 
 
 def scan_thread(host, t_port_start, t_port_end, results):
     for port in range(t_port_start, t_port_end + 1):
-        scan_port(host, port, results)
+        if scan_port(host, port):
+            # convert to srting so it won't return errors in validation function
+            results.append(port)
 
 
 def scan_port_range(host, start_port, end_port, n_threads):
-    # string with results for gui version
+    # list with results for gui version
     results = []
     start, end = start_port, end_port
     step = (end - start + 1) // n_threads
@@ -46,5 +38,4 @@ def scan_port_range(host, start_port, end_port, n_threads):
     for thread in threads:
         thread.join()
 
-    print(f"[{Color.LIGHT_GREEN}!{Color.RESET}] Port scan finished")
     return results
