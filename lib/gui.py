@@ -127,8 +127,8 @@ def make_port_scan(main_window):
         if not re.match(regex, host_address):
             messagebox.showerror("Error", "Invalid host adress")
         elif len(ports) != 2 or\
-            (lower_port.isdigit() == False and upper_port.isdigit() == False) or\
-            (int(lower_port) < 0 and int(upper_port) < 0) or \
+            (lower_port.isdigit() == False or upper_port.isdigit() == False) or\
+            (int(lower_port) < 0 or int(upper_port) < 0) or \
             (int(upper_port) < int(lower_port)) or\
             (int(lower_port) > 65535 or int(upper_port) > 65535):
             messagebox.showerror("Error", "Invalid port range")
