@@ -49,3 +49,4 @@ if __name__ == "__main__":
                     print(
                         f"[{GREEN}+{RESET}] {GRAY}({host}){RESET}\tOpen port: {BLUE}{port}{RESET}"
                     )
+                print(f"[{Color.LIGHT_GREEN}!{Color.RESET}] Port scan finished")

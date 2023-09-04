@@ -39,13 +39,13 @@ class EntryWithPlaceholder(tk.Entry):
         if not self.get():
             self.put_placeholder()
 
-default_bg_color = "#222"
+DEFAULT_BG_COLOR = "#222"
 
 # Functions will be invoked after clicking button in main PixelToolkitFile
 def make_password_generator(main_window):
     font = ("Tahoma", 15)
     password_generator_window = tk.Toplevel(
-        main_window, bg=default_bg_color, width=600, height=600
+        main_window, bg=DEFAULT_BG_COLOR, width=600, height=600
     )
     password_generator_window.resizable(False, False)
     password_generator_window.title("Password Generator")
@@ -56,7 +56,7 @@ def make_password_generator(main_window):
         text="Provide password length:",
         font=font,
         fg="#EEE",
-        bg=default_bg_color,
+        bg=DEFAULT_BG_COLOR,
         padx=10,
         pady=10,
         wraplength=250,
@@ -100,7 +100,7 @@ def make_password_generator(main_window):
 def make_port_scan(main_window):
     width = 800
     height = 600
-    port_scan_window = tk.Toplevel(main_window, bg=default_bg_color, width=width, height=height)
+    port_scan_window = tk.Toplevel(main_window, bg=DEFAULT_BG_COLOR, width=width, height=height)
     port_scan_window.resizable(False, False)
     port_scan_window.title("Port Scanner")
 
@@ -111,7 +111,7 @@ def make_port_scan(main_window):
     port_range = tk.StringVar(value="1-65535")
     threads = tk.StringVar(value=multiprocessing.cpu_count())
 
-    scan_label = tk.Label(port_scan_frame, text="Select scanning options", bg=default_bg_color, fg="#FFF")
+    scan_label = tk.Label(port_scan_frame, text="Select scanning options", bg=DEFAULT_BG_COLOR, fg="#FFF")
     scan_label.pack(fill=tk.X, expand=True)
 
     def validate_input(host_address, ports_range, n_threads):
@@ -127,8 +127,8 @@ def make_port_scan(main_window):
         if not re.match(regex, host_address):
             messagebox.showerror("Error", "Invalid host adress")
         elif len(ports) != 2 or\
-            (lower_port.isdigit() == False and int(lower_port) > 0) or\
-            (upper_port.isdigit() == False and int(upper_port) > 0) or \
+            (lower_port.isdigit() == False and upper_port.isdigit() == False) or\
+            (int(lower_port) < 0 and int(upper_port) < 0) or \
             (int(upper_port) < int(lower_port)) or\
             (int(lower_port) > 65535 or int(upper_port) > 65535):
             messagebox.showerror("Error", "Invalid port range")

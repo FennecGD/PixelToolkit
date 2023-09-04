@@ -15,12 +15,10 @@ def scan_port(host, port) -> bool:
 def scan_thread(host, t_port_start, t_port_end, results):
     for port in range(t_port_start, t_port_end + 1):
         if scan_port(host, port):
-            # convert to srting so it won't return errors in validation function
             results.append(port)
 
 
 def scan_port_range(host, start_port, end_port, n_threads):
-    # list with results for gui version
     results = []
     start, end = start_port, end_port
     step = (end - start + 1) // n_threads
