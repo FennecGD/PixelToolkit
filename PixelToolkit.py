@@ -1,8 +1,10 @@
 #!/bin/python3
-from lib.pass_gen import PasswordGenerator
 import argparse
-import sys
+from lib.pass_gen import PasswordGenerator
+from lib.utils import Color
 import multiprocessing
+import sys
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="PixelToolkit - Collection of computer tools")
@@ -35,4 +37,16 @@ if __name__ == "__main__":
             start_port, end_port = port_range.split("-")
             start_port, end_port = int(start_port), int(end_port)
 
-            scan_port_range(host, start_port, end_port, threads)
+            open_ports = scan_port_range(host, start_port, end_port, threads)
+            if len(open_ports) == 0:
+                print("There were no open ports on specified range")
+            else:
+                RESET = Color.RESET
+                GREEN = Color.GREEN
+                GRAY = Color.GRAY
+                BLUE = Color.BLUE
+                for port in open_ports:
+                    print(
+                        f"[{GREEN}+{RESET}] {GRAY}({host}){RESET}\tOpen port: {BLUE}{port}{RESET}"
+                    )
+                print(f"[{Color.LIGHT_GREEN}!{Color.RESET}] Port scan finished")
