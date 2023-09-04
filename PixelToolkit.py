@@ -1,8 +1,9 @@
 #!/bin/python3
-from lib.pass_gen import PasswordGenerator
 import argparse
-import sys
+from lib.pass_gen import PasswordGenerator
 import multiprocessing
+import sys
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="PixelToolkit - Collection of computer tools")

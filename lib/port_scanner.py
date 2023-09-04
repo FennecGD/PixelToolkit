@@ -1,12 +1,9 @@
 import socket
 import threading
-from queue import Queue
 from lib.utils import Color
 
-queue = Queue()
 
-
-def scan_port(host, port):
+def scan_port(host, port, results):
     try:
         sock = socket.socket()
         sock.connect((host, port))
@@ -14,19 +11,25 @@ def scan_port(host, port):
         GREEN = Color.GREEN
         GRAY = Color.GRAY
         BLUE = Color.BLUE
-        print(f"[{GREEN}+{RESET}] {GRAY}({host}){RESET}\tOpen port: {BLUE}{port}{RESET}")
+        print(
+            f"[{GREEN}+{RESET}] {GRAY}({host}){RESET}\tOpen port: {BLUE}{port}{RESET}"
+        )
+        current = host + "\t" + "Open port: " + str(port)
+        results.append(current)
     except:
         pass
     finally:
         sock.close()
 
 
-def scan_thread(host, t_port_start, t_port_end):
+def scan_thread(host, t_port_start, t_port_end, results):
     for port in range(t_port_start, t_port_end + 1):
-        scan_port(host, port)
+        scan_port(host, port, results)
 
 
 def scan_port_range(host, start_port, end_port, n_threads):
+    # string with results for gui version
+    results = []
     start, end = start_port, end_port
     step = (end - start + 1) // n_threads
 
@@ -34,7 +37,9 @@ def scan_port_range(host, start_port, end_port, n_threads):
     for i in range(n_threads):
         thread_start = start + i * step
         thread_end = start + (i + 1) * step - 1 if i != n_threads - 1 else end
-        thread = threading.Thread(target=scan_thread, args=(host, thread_start, thread_end))
+        thread = threading.Thread(
+            target=scan_thread, args=(host, thread_start, thread_end, results)
+        )
         threads.append(thread)
         thread.start()
 
@@ -42,3 +47,4 @@ def scan_port_range(host, start_port, end_port, n_threads):
         thread.join()
 
     print(f"[{Color.LIGHT_GREEN}!{Color.RESET}] Port scan finished")
+    return results

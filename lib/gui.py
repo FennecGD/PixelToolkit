@@ -1,6 +1,9 @@
-import tkinter as tk
 from lib.pass_gen import PasswordGenerator
 from lib.utils import copy_to_clipboard
+from lib.port_scanner import scan_port_range
+import multiprocessing
+import tkinter as tk
+from tkinter import messagebox
 
 
 # This class allows us to create entries with placeholders
@@ -38,7 +41,7 @@ class EntryWithPlaceholder(tk.Entry):
 
 
 # Functions will be invoked after clicking button in main PixelToolkitFile
-def password_gen_top_level(main_window):
+def make_password_generator(main_window):
     font = ("Tahoma", 15)
     password_generator_window = tk.Toplevel(
         main_window, bg="#222", width=600, height=600
@@ -70,10 +73,7 @@ def password_gen_top_level(main_window):
 
     generator = PasswordGenerator()
 
-    copy_button = tk.Button(
-        password_generator_window,
-        text="Copy"
-    )
+    copy_button = tk.Button(password_generator_window, text="Copy")
 
     def on_submit():
         if is_input_correct(user_input):
@@ -96,10 +96,83 @@ def password_gen_top_level(main_window):
     submit_button.grid(row=3, column=1)
 
 
+def make_port_scan(main_window):
+    font = ""
+    width = 800
+    height = 600
+    port_scan_window = tk.Toplevel(main_window, bg="#222", width=width, height=height)
+    port_scan_window.resizable(False, False)
+    port_scan_window.title("Port Scanner")
+
+    port_scan_frame = tk.Frame(port_scan_window)
+    port_scan_frame.pack(fill=tk.BOTH, expand=True)
+
+    host = tk.StringVar()
+    host.set("127.0.0.1")
+    port_range = tk.StringVar()
+    port_range.set("1-65535")
+    threads = tk.StringVar()
+    threads.set(multiprocessing.cpu_count())
+
+    scan_label = tk.Label(port_scan_frame, text="Select scanning options", bg="#222", fg="#FFF")
+    scan_label.pack(fill=tk.X, expand=True)
+
+    def validate_input(host_address, ports_range, n_threads):
+        host_address = host_address.replace("default: ", "")
+        ports_range = ports_range.replace("default: ", "")
+        n_threads = n_threads.replace("default: ", "")
+        import re
+
+        regex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
+        ports = ports_range.split("-")
+
+        lower_port = ports[0]
+        upper_port = ports[1]
+        if not re.search(regex, host_address):
+            messagebox.showerror("Error", "Invalid host adress")
+        elif not len(ports) == 2:
+            messagebox.showerror("Error", "Invalid port range")
+        elif not lower_port.isdigit() and int(lower_port) > 0:
+            messagebox.showerror("Error", "Invalid port range")
+        elif not upper_port.isdigit() and int(upper_port) > 0:
+            messagebox.showerror("Error", "Invalid port range")
+        elif int(upper_port) < int(lower_port):
+            messagebox.showerror("Error", "Invalid port range")
+        elif not n_threads.isdigit() and int(n_threads) > 0:
+            messagebox.showerror("Error", "Invalid thread number")
+        else:
+            result = scan_port_range(host_address, int(lower_port), int(upper_port), int(n_threads))
+            add_result_label(result)
+
+    def add_result_label(result):
+        if len(result) == 0:
+            result_label.config(text="There were not any open ports on specified range")
+        else:
+            result_label.config(text="\n".join(result))
+
+
+    entries = [
+        tk.Label(port_scan_frame, text="Enter host adress: "),
+        EntryWithPlaceholder(port_scan_frame, "default: ", textvariable=host),
+        tk.Label(port_scan_frame, text="Enter ports range to scan: "),
+        EntryWithPlaceholder(port_scan_frame, "default: ", textvariable=port_range),
+        tk.Label(port_scan_frame, text="Enter amount of threads that will be used for scanning: ",),
+        EntryWithPlaceholder(port_scan_frame, "default: ", textvariable=threads),
+        tk.Button(
+            port_scan_frame,
+            text="Scan Ports",
+            command=lambda: validate_input(host.get(), port_range.get(), threads.get()),
+        ),
+    ]
+    for i in range(len(entries)):
+        entries[i].pack(fill=tk.X, expand=True)
+
+    result_label = tk.Label(port_scan_frame)
+    result_label.pack(fill=tk.X, expand=True)
+
+
 def main_window_generator():
     root = tk.Tk()
-    x = root.winfo_screenwidth()
-    y = root.winfo_screenheight()
 
     # For time we don't know full extent of this app, buttons will be placed manually
     # When we'll know how we'll want to set them up, I'll automate placing them and generating them with class
@@ -107,7 +180,15 @@ def main_window_generator():
     password_button = tk.Button(
         root,
         text="Password generator",
-        command=lambda: password_gen_top_level(root),
+        command=lambda: make_password_generator(root),
     )
     password_button.grid(row=1, column=1)
+
+    port_scan_button = tk.Button(
+        root,
+        text="Port Scanner",
+        command=lambda: make_port_scan(root),
+    )
+    port_scan_button.grid(row=1, column=2)
+
     root.mainloop()
