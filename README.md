@@ -7,6 +7,7 @@ PixelToolkit project
 - [ ] Scientific calculator
 - [ ] Password hash craker
 - [ ] Archive password cracker
+- [x] Port Scanner
 - [ ] Web bruteforcer
 - [ ] Web crawler
 
