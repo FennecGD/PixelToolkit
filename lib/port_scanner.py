@@ -1,5 +1,5 @@
 import socket
-from threading import Thread
+import threading
 from queue import Queue
 
 queue = Queue()
@@ -15,25 +15,23 @@ def scan_port(host, port):
         sock.close()
 
 
-def scan_thread(host):
-    global queue
-    # TODO reimplement this loop with multiple ranges and threads
-    while True:
-        port_number = queue.get()
-        scan_port(host, port_number)
-        queue.task_done()
+def scan_thread(host, thread_start, thread_end):
+    for port in range(thread_start, thread_end + 1):
+        scan_port(host, port)
 
 
-def start_port_scan(host, ports, threads):
-    global queue
-    for thread in range(threads):
-        thread = Thread(target=scan_thread, args=(host,))
-        # if daemon is True that thread will end when the main threadends
-        thread.daemon = True
+def start_port_scan(host, ports_range, n_threads):
+    start, end = ports_range[0], ports_range[-1]    
+    step = (end - start + 1) // n_threads
+
+    threads = []
+    for i in range(n_threads):
+        thread_start = start + i * step
+        thread_end = start + (i + 1) * step - 1 if i != n_threads - 1 else end
+        thread = threading.Thread(target=scan_thread, args=(host, thread_start, thread_end))
+        threads.append(thread)
         thread.start()
 
-    for port in ports:
-        # put each port to queue to start scan
-        queue.put(port)
 
-    queue.join()
+    for thread in threads:
+        thread.join()
