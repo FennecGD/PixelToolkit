@@ -138,6 +138,8 @@ def make_port_scan(main_window):
             messagebox.showerror("Error", "Invalid port range")
         elif int(upper_port) < int(lower_port):
             messagebox.showerror("Error", "Invalid port range")
+        elif isinstance(n_threads, str):
+            messagebox.showerror("Error", "Invalid thread number")
         elif not n_threads.isdigit() and int(n_threads) > 0:
             messagebox.showerror("Error", "Invalid thread number")
         else:
