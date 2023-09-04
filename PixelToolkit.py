@@ -27,12 +27,11 @@ if __name__ == "__main__":
             print("Password: " + generator.gen(args.length))
 
         elif args.subcommand == "port-scan":
-            from lib.port_scanner import start_port_scan
+            from lib.port_scanner import scan_port_range
             host, port_range = args.host, args.port_range
             threads = args.threads
 
             start_port, end_port = port_range.split("-")
             start_port, end_port = int(start_port), int(end_port)
 
-            ports = [port for port in range(start_port, end_port)]
-            start_port_scan(host, ports, threads)
+            scan_port_range(host, start_port, end_port, threads)
