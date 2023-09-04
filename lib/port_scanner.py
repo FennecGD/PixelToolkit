@@ -15,13 +15,13 @@ def scan_port(host, port):
         sock.close()
 
 
-def scan_thread(host, thread_start, thread_end):
-    for port in range(thread_start, thread_end + 1):
+def scan_thread(host, t_port_start, t_port_end):
+    for port in range(t_port_start, t_port_end + 1):
         scan_port(host, port)
 
 
-def start_port_scan(host, ports_range, n_threads):
-    start, end = ports_range[0], ports_range[-1]    
+def scan_port_range(host, start_port, end_port, n_threads):
+    start, end = start_port, end_port
     step = (end - start + 1) // n_threads
 
     threads = []
@@ -31,7 +31,6 @@ def start_port_scan(host, ports_range, n_threads):
         thread = threading.Thread(target=scan_thread, args=(host, thread_start, thread_end))
         threads.append(thread)
         thread.start()
-
 
     for thread in threads:
         thread.join()
