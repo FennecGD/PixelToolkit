@@ -1,14 +1,20 @@
 import socket
 import threading
 from queue import Queue
+from lib.utils import Color
 
 queue = Queue()
+
 
 def scan_port(host, port):
     try:
         sock = socket.socket()
         sock.connect((host, port))
-        print(f"{host}\t{port:5} is open")
+        RESET = Color.RESET
+        GREEN = Color.GREEN
+        GRAY = Color.GRAY
+        BLUE = Color.BLUE
+        print(f"[{GREEN}+{RESET}] {GRAY}({host}){RESET}\tOpen port: {BLUE}{port}{RESET}")
     except:
         pass
     finally:
@@ -34,3 +40,5 @@ def scan_port_range(host, start_port, end_port, n_threads):
 
     for thread in threads:
         thread.join()
+
+    print(f"[{Color.LIGHT_GREEN}!{Color.RESET}] Port scan finished")
