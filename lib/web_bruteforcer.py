@@ -12,10 +12,6 @@ class WebBruteforcer():
         self.cli = cli
         self.results = []
 
-    # TODO: `scan` version of this function which returns a list of scan results
-    # other idea is to make this function accept a `cli` argument which defaults to False
-    # and then use it (set to True) in the PixelToolkit.py CLI code
-
     def scan(self, url: str, wordlist: str, n_threads: int):
         log(f"Starting web bruteforcer. URL={url} threads={n_threads}", LogUrgency.INFO)
         # TODO: support multiple FUZZ parameters in the URL

@@ -194,6 +194,8 @@ def make_web_brute(main_window):
         elif len(results) == 0:
             result_label.config(text="Fuzzing finished, no results.")
         else:
+            # TODO: Find a way to gradually append more results as they are discovered instead of waiting for
+            #       the whole scan to finish.
             result_label.config(text="Discovered endpoints:\n" + "\n".join(results))
 
     entries = [
