@@ -1,3 +1,4 @@
+from lib.utils import log, LogUrgency
 import socket
 import threading
 
@@ -19,6 +20,7 @@ def scan_thread(host, t_port_start, t_port_end, results):
 
 
 def scan_port_range(host, start_port, end_port, n_threads):
+    log(f"Port scanning started. host={host} range={start_port}-{end_port} n_threads={n_threads}", LogUrgency.INFO)
     results = []
     start, end = start_port, end_port
     step = (end - start + 1) // n_threads

@@ -1,4 +1,5 @@
 from lib.pass_gen import PasswordGenerator
+from lib.web_bruteforcer import WebBruteforcer
 from lib.utils import copy_to_clipboard
 from lib.port_scanner import scan_port_range
 import multiprocessing
@@ -39,9 +40,12 @@ class EntryWithPlaceholder(tk.Entry):
         if not self.get():
             self.put_placeholder()
 
+
 DEFAULT_BG_COLOR = "#222"
 
 # Functions will be invoked after clicking button in main PixelToolkitFile
+
+
 def make_password_generator(main_window):
     font = ("Tahoma", 15)
     password_generator_window = tk.Toplevel(
@@ -126,13 +130,13 @@ def make_port_scan(main_window):
         upper_port = ports[1]
         if not re.match(regex, host_address):
             messagebox.showerror("Error", "Invalid host adress")
-        elif len(ports) != 2 or\
-            (lower_port.isdigit() == False or upper_port.isdigit() == False) or\
+        elif len(ports) != 2 or \
+            (lower_port.isdigit() is False or upper_port.isdigit() is False) or \
             (int(lower_port) < 0 or int(upper_port) < 0) or \
-            (int(upper_port) < int(lower_port)) or\
-            (int(lower_port) > 65535 or int(upper_port) > 65535):
+            (int(upper_port) < int(lower_port)) or \
+                (int(lower_port) > 65535 or int(upper_port) > 65535):
             messagebox.showerror("Error", "Invalid port range")
-        elif n_threads.isdigit() == False or int(n_threads) < 1:
+        elif n_threads.isdigit() is False or int(n_threads) < 1:
             messagebox.showerror("Error", "Invalid thread number")
 
         else:
@@ -140,15 +144,15 @@ def make_port_scan(main_window):
             if len(result) == 0:
                 result_label.config(text="There were not any open ports on specified range")
             else:
-                result_label.config(text="Open ports for specified host\n" + "\n".join(list(map(lambda x: str(x), result))))
-
+                result_label.config(text="Open ports for specified host\n" +
+                                    "\n".join(list(map(lambda x: str(x), result))))
 
     entries = [
         tk.Label(port_scan_frame, text="Enter host adress: "),
         EntryWithPlaceholder(port_scan_frame, "default: ", textvariable=host),
         tk.Label(port_scan_frame, text="Enter ports range to scan: "),
         EntryWithPlaceholder(port_scan_frame, "default: ", textvariable=port_range),
-        tk.Label(port_scan_frame, text="Enter amount of threads that will be used for scanning: ",),
+        tk.Label(port_scan_frame, text="Enter amount of threads that will be used for scanning: "),
         EntryWithPlaceholder(port_scan_frame, "default: ", textvariable=threads),
         tk.Button(
             port_scan_frame,
@@ -163,12 +167,62 @@ def make_port_scan(main_window):
     result_label.pack(fill=tk.X, expand=True)
 
 
+def make_web_brute(main_window):
+    width = 800
+    height = 600
+    web_brute_window = tk.Toplevel(main_window, bg=DEFAULT_BG_COLOR, width=width, height=height)
+    web_brute_window.resizable(False, False)
+    web_brute_window.title("Web Content Bruteforcer")
+
+    web_brute_frame = tk.Frame(web_brute_window)
+    web_brute_frame.pack(fill=tk.BOTH, expand=True)
+
+    url = tk.StringVar()
+    wordlist = tk.StringVar()
+    n_threads = tk.StringVar(value=multiprocessing.cpu_count())
+
+    scan_label = tk.Label(web_brute_frame, text="Select fuzzing options", bg=DEFAULT_BG_COLOR, fg="#FFF")
+    scan_label.pack(fill=tk.X, expand=True)
+
+    def start_web_brute(url: str, wordlist: str, n_threads: int):
+        wordlist = wordlist.replace("Default: builtin wordlist", "")
+        n_threads = int(n_threads.replace("Default: ", ""))
+        web_bruteforcer = WebBruteforcer()
+        results = web_bruteforcer.scan(url, wordlist, n_threads)
+        if results is False:
+            messagebox.showerror("Error", "You need to specify a correct URL, including the 'FUZZ' keyword")
+        elif len(results) == 0:
+            result_label.config(text="Fuzzing finished, no results.")
+        else:
+            result_label.config(text="Discovered endpoints:\n" + "\n".join(results))
+
+    entries = [
+        tk.Label(web_brute_frame, text="URL (insert 'FUZZ' keyword to specify fuzzing point): "),
+        EntryWithPlaceholder(web_brute_frame, "", textvariable=url),
+        tk.Label(web_brute_frame, text="Wordlist path: "),
+        EntryWithPlaceholder(web_brute_frame, "Default: builtin wordlist", textvariable=wordlist),
+        tk.Label(web_brute_frame, text="Enter amount of threads that will be used for fuzzing: "),
+        EntryWithPlaceholder(web_brute_frame, "Default: ", textvariable=n_threads),
+        tk.Button(
+            web_brute_frame,
+            text="Start fuzzing",
+            command=lambda: start_web_brute(url.get(), wordlist.get(), n_threads.get()),
+        ),
+    ]
+    for entry in entries:
+        entry.pack(fill=tk.X, expand=True)
+
+    result_label = tk.Label(web_brute_frame)
+    result_label.pack(fill=tk.X, expand=True)
+
+
 def main_window_generator():
     root = tk.Tk()
 
     # For time we don't know full extent of this app, buttons will be placed manually
     # When we'll know how we'll want to set them up, I'll automate placing them and generating them with class
-    # Maybe we could group buttons by categories like networking, cryptography, visualization and display them with for loop
+    # Maybe we could group buttons by categories like networking, cryptography, visualization and display them
+    # with for loop
     password_button = tk.Button(
         root,
         text="Password generator",
@@ -182,5 +236,12 @@ def main_window_generator():
         command=lambda: make_port_scan(root),
     )
     port_scan_button.grid(row=1, column=2)
+
+    web_brute_button = tk.Button(
+        root,
+        text="Web Content Bruteforcer",
+        command=lambda: make_web_brute(root),
+    )
+    web_brute_button.grid(row=1, column=3)
 
     root.mainloop()

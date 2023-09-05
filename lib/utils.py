@@ -1,5 +1,8 @@
 # Stuff that will be shared by more than one lib
 
+import os
+
+
 def copy_to_clipboard(string_to_copy):
     try:
         import pyperclip
@@ -43,7 +46,26 @@ class LogUrgency:
     ERROR = Color.RED + "ERROR"
 
 
+IS_DEBUG_ENV_VAR_SET = os.environ.get("DEBUG") is not None
+
+
 def log(string_to_log, urgency=LogUrgency.INFO):
-    import datetime
-    timestamp = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-    print(f"{Color.GRAY}[{timestamp}] [{urgency}{Color.GRAY}]{Color.WHITE} {string_to_log}")
+    if IS_DEBUG_ENV_VAR_SET:
+        import datetime
+        timestamp = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        print(f"{Color.GRAY}[{timestamp}] [{urgency}{Color.GRAY}]{Color.WHITE} {string_to_log}")
+
+
+def cli_error(message: str):
+    import sys
+    print(f"[{Color.RED}!{Color.RESET}] {message}", file=sys.stderr)
+    exit(1)
+
+
+class MessageType:
+    NEW_ITEM = Color.GREEN + "+"
+    INFO = Color.LIGHT_GREEN + "!"
+
+
+def cli_print(message: str, message_type: MessageType):
+    print(f"[{message_type}{Color.RESET}] {message}")
