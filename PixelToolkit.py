@@ -1,7 +1,8 @@
 #!/bin/python3
 import argparse
 from lib.pass_gen import PasswordGenerator
-from lib.utils import Color
+from lib.web_bruteforcer import WebBruteforcer
+from lib.utils import Color, cli_print, MessageType
 import multiprocessing
 import sys
 
@@ -19,6 +20,16 @@ if __name__ == "__main__":
                            help="Port range to scan. Default is from 1 to 65535 (every port)")
     port_scan.add_argument("--threads", "-t", type=int, dest="threads", default=multiprocessing.cpu_count(),
                            help="Amount of threads that will be used for port scanning")
+
+    web_brute = subparsers.add_parser("web-brute", help="Web Content Bruteforcer",
+                                      formatter_class=argparse.RawDescriptionHelpFormatter, epilog=f"""\nexamples:
+  {sys.argv[0]} web-brute --url http://localhost:3000/FUZZ""")
+    web_brute.add_argument("--url", "-u", type=str,
+                           help="URL to scan. Use 'FUZZ' to indicate scanning point", required=True)
+    web_brute.add_argument("--wordlist", "-w", type=str,
+                           help="Wordlist to use (uses builtin most_common.txt wordlist by default)")
+    web_brute.add_argument("--threads", "-t", type=int, default=multiprocessing.cpu_count(),
+                           help="Ammount of threads that will be used for scanning (CPU threads by default)")
 
     args = parser.parse_args()
     if len(sys.argv) == 1:  # If no arguments passed -> GUI
@@ -39,14 +50,16 @@ if __name__ == "__main__":
 
             open_ports = scan_port_range(host, start_port, end_port, threads)
             if len(open_ports) == 0:
-                print("There were no open ports on specified range")
+                cli_print("There were no open ports on specified range", MessageType.INFO)
             else:
                 RESET = Color.RESET
                 GREEN = Color.GREEN
                 GRAY = Color.GRAY
                 BLUE = Color.BLUE
                 for port in open_ports:
-                    print(
-                        f"[{GREEN}+{RESET}] {GRAY}({host}){RESET}\tOpen port: {BLUE}{port}{RESET}"
-                    )
-                print(f"[{Color.LIGHT_GREEN}!{Color.RESET}] Port scan finished")
+                    cli_print(f"{GRAY}({host}){RESET}\tOpen port: {BLUE}{port}{RESET}", MessageType.NEW_ITEM)
+                cli_print("Port scan finished", MessageType.INFO)
+
+        elif args.subcommand == "web-brute":
+            scanner = WebBruteforcer(cli=True)
+            scanner.scan(args.url, args.wordlist, args.threads)

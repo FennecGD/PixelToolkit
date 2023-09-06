@@ -4,12 +4,12 @@ PixelToolkit project
 
 # Ideas for new modules
 
-- [ ] Scientific calculator
-- [ ] Password hash craker
-- [ ] Archive password cracker
+- [ ] Scientific Calculator
+- [ ] Password Hash Cracker
+- [ ] Archive Password Cracker
 - [x] Port Scanner
-- [ ] Web bruteforcer
-- [ ] Web crawler
+- [x] Web Bruteforcer
+- [ ] Web Crawler
 
 # License
 
