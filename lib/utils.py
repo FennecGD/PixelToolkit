@@ -1,6 +1,7 @@
 # Stuff that will be shared by more than one lib
 
 import os
+import math
 
 
 def copy_to_clipboard(string_to_copy):
@@ -69,3 +70,44 @@ class MessageType:
 
 def cli_print(message: str, message_type: MessageType):
     print(f"[{message_type}{Color.RESET}] {message}")
+
+
+# Calculate TF (Term Frequency)
+def calculate_tf(document: str):
+    tokenized_doc = document.lower().split()
+    term_frequency = {}
+    for term in tokenized_doc:
+        if term in term_frequency:
+            term_frequency[term] += 1
+        else:
+            term_frequency[term] = 1
+    return term_frequency
+
+# Calculate IDF (Inverse Document Frequency)
+def calculate_idf(documents: [str], term: str):
+    document_count = len(documents)
+    document_with_term = sum(1 for doc in documents if term in doc.lower().split())
+    if document_with_term == 0:
+        return 0  # Term not present in any document
+    return math.log(document_count / document_with_term)
+
+# Calculate TF-IDF (Term Frequency - Inverse Document Frequency)
+def calculate_tf_idf(document: str, documents: [str]):
+    tf = calculate_tf(document)
+    tf_idf = {}
+    for term, freq in tf.items():
+        idf = calculate_idf(documents, term)
+        tf_idf[term] = freq * idf
+    return tf_idf
+
+def remove_special_characters(text: str):
+    return "".join(char for char in text if char.isalnum() or char.isspace() or char in ['_', '-', '@', '$'])
+
+# Function to extract keywords from the provided text
+def extract_keywords(text: str, min: int = 1, max: int = 100):
+    keywords = calculate_tf_idf(text, [text]) # Treat the entire text as a single document
+    keywords = [remove_special_characters(keyword) for keyword in keywords] # Remove special characters
+    # Remove empty elements + filter the keywords length to the expected range
+    keywords = [keyword for keyword in keywords if keyword and len(keyword) in range(min, max + 1)]
+    keywords = list(set(keywords)) # Remove duplicates
+    return keywords

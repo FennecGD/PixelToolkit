@@ -10,6 +10,7 @@ PixelToolkit project
 - [x] Port Scanner
 - [x] Web Bruteforcer
 - [ ] Web Crawler
+- [x] Wordlist Generator
 
 # License
 
