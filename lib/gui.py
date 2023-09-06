@@ -1,5 +1,6 @@
 from lib.pass_gen import PasswordGenerator
 from lib.web_bruteforcer import WebBruteforcer
+from lib.wordlist_generator import WordlistGenerator
 from lib.utils import copy_to_clipboard
 from lib.port_scanner import scan_port_range
 import multiprocessing
@@ -192,11 +193,11 @@ def make_web_brute(main_window):
         if results is False:
             messagebox.showerror("Error", "You need to specify a correct URL, including the 'FUZZ' keyword")
         elif len(results) == 0:
-            result_label.config(text="Fuzzing finished, no results.")
+            result_label.insert(tk.END, "Fuzzing finished, no results.")
         else:
             # TODO: Find a way to gradually append more results as they are discovered instead of waiting for
             #       the whole scan to finish.
-            result_label.config(text="Discovered endpoints:\n" + "\n".join(results))
+            result_label.insert(tk.END, "Discovered endpoints:\n" + "\n".join(results))
 
     entries = [
         tk.Label(web_brute_frame, text="URL (insert 'FUZZ' keyword to specify fuzzing point): "),
@@ -214,12 +215,73 @@ def make_web_brute(main_window):
     for entry in entries:
         entry.pack(fill=tk.X, expand=True)
 
-    result_label = tk.Label(web_brute_frame)
+    result_label = tk.Text(web_brute_frame)
     result_label.pack(fill=tk.X, expand=True)
+
+    copy_button = tk.Button(web_brute_window, text="Copy",
+                            command=lambda: copy_to_clipboard(result_label.get("1.0", "end-1c")))
+    copy_button.pack()
+
+
+def make_wordlist_gen(main_window):
+    width = 800
+    height = 600
+    wordlist_gen_window = tk.Toplevel(main_window, bg=DEFAULT_BG_COLOR, width=width, height=height)
+    wordlist_gen_window.resizable(False, False)
+    wordlist_gen_window.title("Wordlist Generator")
+
+    wordlist_gen_frame = tk.Frame(wordlist_gen_window)
+    wordlist_gen_frame.pack(fill=tk.BOTH, expand=True)
+
+    url = tk.StringVar()
+    file = tk.StringVar()
+    min = tk.StringVar(value=1)
+    max = tk.StringVar(value=100)
+
+    scan_label = tk.Label(wordlist_gen_frame, text="Select Wordlist Generator Options", bg=DEFAULT_BG_COLOR, fg="#FFF")
+    scan_label.pack(fill=tk.X, expand=True)
+
+    def start_wordlist_gen(url: str, file: str, min: int, max: int):
+        # TODO: validate input
+        generator = WordlistGenerator()
+        res = generator.gen(url, file, int(min), int(max))
+        if not res:
+            messagebox.showerror("Error", "Something went wrong")
+        results = generator.results
+        if len(results) == 0:
+            result_label.insert(tk.END, "Generation finished, no keywords found")
+        else:
+            result_label.insert(tk.END, "\n".join(results))
+
+    entries = [
+        tk.Label(wordlist_gen_frame, text="URL (choose either URL or File):"),
+        EntryWithPlaceholder(wordlist_gen_frame, "", textvariable=url),
+        tk.Label(wordlist_gen_frame, text="File (choose either URL or File):"),
+        EntryWithPlaceholder(wordlist_gen_frame, "", textvariable=file),
+        tk.Label(wordlist_gen_frame, text="Minimum keyword length:"),
+        EntryWithPlaceholder(wordlist_gen_frame, "", textvariable=min),
+        tk.Label(wordlist_gen_frame, text="Maximum keyword length:"),
+        EntryWithPlaceholder(wordlist_gen_frame, "", textvariable=max),
+        tk.Button(
+            wordlist_gen_frame,
+            text="Generate Wordlist",
+            command=lambda: start_wordlist_gen(url.get(), file.get(), min.get(), max.get()),
+        ),
+    ]
+    for entry in entries:
+        entry.pack(fill=tk.X, expand=True)
+
+    result_label = tk.Text(wordlist_gen_frame)
+    result_label.pack(fill=tk.X, expand=True)
+
+    copy_button = tk.Button(wordlist_gen_window, text="Copy",
+                            command=lambda: copy_to_clipboard(result_label.get("1.0", "end-1c")))
+    copy_button.pack()
 
 
 def main_window_generator():
     root = tk.Tk()
+    root.title("PixelToolkit")
 
     # For time we don't know full extent of this app, buttons will be placed manually
     # When we'll know how we'll want to set them up, I'll automate placing them and generating them with class
@@ -245,5 +307,12 @@ def main_window_generator():
         command=lambda: make_web_brute(root),
     )
     web_brute_button.grid(row=1, column=3)
+
+    wordlist_gen_button = tk.Button(
+        root,
+        text="Wordlist Generator",
+        command=lambda: make_wordlist_gen(root),
+    )
+    wordlist_gen_button.grid(row=2, column=1)
 
     root.mainloop()

@@ -2,7 +2,8 @@
 import argparse
 from lib.pass_gen import PasswordGenerator
 from lib.web_bruteforcer import WebBruteforcer
-from lib.utils import Color, cli_print, MessageType
+from lib.wordlist_generator import WordlistGenerator
+from lib.utils import Color, cli_print, MessageType, cli_error
 import multiprocessing
 import sys
 
@@ -30,6 +31,12 @@ if __name__ == "__main__":
                            help="Wordlist to use (uses builtin most_common.txt wordlist by default)")
     web_brute.add_argument("--threads", "-t", type=int, default=multiprocessing.cpu_count(),
                            help="Ammount of threads that will be used for scanning (CPU threads by default)")
+
+    wordlist_gen = subparsers.add_parser("wordlist-gen", help="Wordlist Generator")
+    wordlist_gen.add_argument("--url", "-u", type=str, help="URL to generate wordlist from")
+    wordlist_gen.add_argument("--file", "-f", type=str, help="File to generate wordlist from")
+    wordlist_gen.add_argument("--min", type=int, help="Minimum keyword length", default=1)
+    wordlist_gen.add_argument("--max", type=int, help="Maximum keyword length", default=100)
 
     args = parser.parse_args()
     if len(sys.argv) == 1:  # If no arguments passed -> GUI
@@ -63,3 +70,14 @@ if __name__ == "__main__":
         elif args.subcommand == "web-brute":
             scanner = WebBruteforcer(cli=True)
             scanner.scan(args.url, args.wordlist, args.threads)
+
+        elif args.subcommand == "wordlist-gen":
+            generator = WordlistGenerator(cli=True)
+            if args.url:
+                generator.gen(url=args.url, min=args.min, max=args.max)
+            elif args.file:
+                generator.gen(file=args.file, min=args.min, max=args.max)
+            else:
+                cli_error("You need to either provide a URL or a File path!")
+            # Here we use print instead of cli_print because we want a plain text output
+            print("\n".join(generator.results))
