@@ -285,7 +285,7 @@ def make_hash(main_window):
 
     input_to_hash = tk.StringVar(value=None)
     algorithm = tk.StringVar(value="SHA256")
-    buf_size = tk.StringVar(value=65536)
+    buf_size = tk.StringVar(value=4096)
     output = tk.StringVar(value="")
 
     def forward_and_insert_hash_result(input, buf_size, algorithm, output):

@@ -43,7 +43,7 @@ if __name__ == "__main__":
     hash.add_argument("--input", "-i", required=True, help="File or text to be hashed.")
     hash.add_argument("--algorithm", '-a', default="SHA256")
     # TODO Implement automatic setting of buffer or remove buffer
-    hash.add_argument("--buf", "-b", help="Size of chunks", default="4096")
+    hash.add_argument("--buf", "-b", help="Size of chunks", default=4096, type=int)
     hash.add_argument("--output", "-o", help="Name for file containing output")
 
     args = parser.parse_args()
