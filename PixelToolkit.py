@@ -38,6 +38,14 @@ if __name__ == "__main__":
     wordlist_gen.add_argument("--min", type=int, help="Minimum keyword length", default=1)
     wordlist_gen.add_argument("--max", type=int, help="Maximum keyword length", default=100)
 
+    hash = subparsers.add_parser("hash", help="Text hashing")
+    # TODO replace current input with file and text arguments.
+    hash.add_argument("--input", "-i", required=True, help="File or text to be hashed.")
+    hash.add_argument("--algorithm", '-a', default="SHA256")
+    # TODO Implement automatic setting of buffer or remove buffer
+    hash.add_argument("--buf", "-b", help="Size of chunks", default=4096, type=int)
+    hash.add_argument("--output", "-o", help="Name for file containing output")
+
     args = parser.parse_args()
     if len(sys.argv) == 1:  # If no arguments passed -> GUI
         from lib.gui import main_window_generator
@@ -81,3 +89,9 @@ if __name__ == "__main__":
                 cli_error("You need to either provide a URL or a File path!")
             # Here we use print instead of cli_print because we want a plain text output
             print("\n".join(generator.results))
+        
+        elif args.subcommand == "hash":
+            from lib.hash import hash_input
+            hashed = hash_input(input=args.input, buf_size=args.buf, algorithm=args.algorithm, output=args.output)
+            GREEN = Color.GREEN
+            cli_print(f"{GREEN}Your hash: {hashed}", MessageType.NEW_ITEM)

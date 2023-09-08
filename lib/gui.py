@@ -3,6 +3,7 @@ from lib.web_bruteforcer import WebBruteforcer
 from lib.wordlist_generator import WordlistGenerator
 from lib.utils import copy_to_clipboard
 from lib.port_scanner import scan_port_range
+from lib.hash import hash_input
 import multiprocessing
 import tkinter as tk
 from tkinter import messagebox
@@ -43,7 +44,8 @@ class EntryWithPlaceholder(tk.Entry):
 
 
 DEFAULT_BG_COLOR = "#222"
-
+DEFAULT_WIDTH = 800
+DEFAULT_HEIGHT = 600
 # Functions will be invoked after clicking button in main PixelToolkitFile
 
 
@@ -103,9 +105,7 @@ def make_password_generator(main_window):
 
 
 def make_port_scan(main_window):
-    width = 800
-    height = 600
-    port_scan_window = tk.Toplevel(main_window, bg=DEFAULT_BG_COLOR, width=width, height=height)
+    port_scan_window = tk.Toplevel(main_window, bg=DEFAULT_BG_COLOR, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT)
     port_scan_window.resizable(False, False)
     port_scan_window.title("Port Scanner")
 
@@ -169,9 +169,7 @@ def make_port_scan(main_window):
 
 
 def make_web_brute(main_window):
-    width = 800
-    height = 600
-    web_brute_window = tk.Toplevel(main_window, bg=DEFAULT_BG_COLOR, width=width, height=height)
+    web_brute_window = tk.Toplevel(main_window, bg=DEFAULT_BG_COLOR, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT)
     web_brute_window.resizable(False, False)
     web_brute_window.title("Web Content Bruteforcer")
 
@@ -224,9 +222,7 @@ def make_web_brute(main_window):
 
 
 def make_wordlist_gen(main_window):
-    width = 800
-    height = 600
-    wordlist_gen_window = tk.Toplevel(main_window, bg=DEFAULT_BG_COLOR, width=width, height=height)
+    wordlist_gen_window = tk.Toplevel(main_window, bg=DEFAULT_BG_COLOR, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT)
     wordlist_gen_window.resizable(False, False)
     wordlist_gen_window.title("Wordlist Generator")
 
@@ -279,6 +275,48 @@ def make_wordlist_gen(main_window):
     copy_button.pack()
 
 
+def make_hash(main_window):
+    hash_window = tk.Toplevel(main_window, bg=DEFAULT_BG_COLOR, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT)
+    hash_window.resizable(False, False)
+    hash_window.title("File and text hasher")
+
+    hash_frame = tk.Frame(hash_window)
+    hash_frame.pack(fill=tk.BOTH, expand=True)
+
+    input_to_hash = tk.StringVar(value=None)
+    algorithm = tk.StringVar(value="SHA256")
+    buf_size = tk.StringVar(value=4096)
+    output = tk.StringVar(value="")
+
+    def forward_and_insert_hash_result(input, buf_size, algorithm, output):
+        result = hash_input(input=input, buf_size=buf_size, algorithm=algorithm, output=output)
+        result_label.config(text=result)
+        copy_button.config(command=lambda: copy_to_clipboard(result))
+        copy_button.pack()
+
+
+    entries = [
+        tk.Label(hash_frame, text="File/String to hash"),
+        EntryWithPlaceholder(hash_frame, "", textvariable=input_to_hash),
+        tk.Label(hash_frame, text="Choose hashing algorithm:"),
+        EntryWithPlaceholder(hash_frame, "", textvariable=algorithm),
+        tk.Label(hash_frame, text="Prefered buf size"),
+        EntryWithPlaceholder(hash_frame, "", textvariable=buf_size),
+        tk.Label(hash_frame, text="Output file name. If submitted empty, program will print your hash below with copy button"),
+        EntryWithPlaceholder(hash_frame, "", textvariable=output),
+        tk.Button(
+            hash_frame,
+            text="Submit Input",
+            command=lambda: forward_and_insert_hash_result(input=input_to_hash.get(), buf_size=buf_size.get(), algorithm=algorithm.get(), output=output.get()),
+        ),
+    ]
+    for entry in entries:
+        entry.pack(fill=tk.X, expand=True)
+
+    result_label = tk.Label(hash_frame, text="")
+    result_label.pack()
+    copy_button = tk.Button(hash_frame, text="Copy hash")
+
 def main_window_generator():
     root = tk.Tk()
     root.title("PixelToolkit")
@@ -315,4 +353,14 @@ def main_window_generator():
     )
     wordlist_gen_button.grid(row=2, column=1)
 
+    hash_button = tk.Button(
+        root,
+        text="Hash file or string",
+        command=lambda: make_hash(root),
+    )
+    hash_button.grid(row=2, column=2)
+
     root.mainloop()
+
+
+
