@@ -39,10 +39,11 @@ if __name__ == "__main__":
     wordlist_gen.add_argument("--max", type=int, help="Maximum keyword length", default=100)
 
     hash = subparsers.add_parser("hash", help="Text hashing")
-    hash.add_argument("--text", "-t", required=True, help="File or text to be hashed. Files will be hashed line by line.")
+    # TODO replace current input with file and text arguments.
+    hash.add_argument("--input", "-i", required=True, help="File or text to be hashed.")
     hash.add_argument("--algorithm", '-a', default="SHA256")
-    # User can now create file name to save the file.
-    hash.add_argument("--buf", "-b", required=True, help="Size of chunks", default=65536)
+    # TODO Implement automatic setting of buffer or remove buffer
+    hash.add_argument("--buf", "-b", required=False, help="Size of chunks", default="4096")
     hash.add_argument("--output", "-o", required=False, help="Name for file containing output")
 
     args = parser.parse_args()
@@ -91,6 +92,6 @@ if __name__ == "__main__":
         
         elif args.subcommand == "hash":
             from lib.hash import hash_input
-            hashed = hash_input(input=args.text, buf_size=args.buf, algorithm=args.algorithm, output=args.output)
+            hashed = hash_input(input=args.input, buf_size=args.buf, algorithm=args.algorithm, output=args.output)
             GREEN = Color.GREEN
-            print(f"{GREEN}Your hash: {hashed}")
+            cli_print(f"{GREEN}Your hash: {hashed}", MessageType.NEW_ITEM)

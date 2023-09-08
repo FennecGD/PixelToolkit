@@ -353,12 +353,12 @@ def main_window_generator():
     )
     wordlist_gen_button.grid(row=2, column=1)
 
-    wordlist_gen_button = tk.Button(
+    hash_button = tk.Button(
         root,
         text="Hash file or string",
         command=lambda: make_hash(root),
     )
-    wordlist_gen_button.grid(row=2, column=2)
+    hash_button.grid(row=2, column=2)
 
     root.mainloop()
 

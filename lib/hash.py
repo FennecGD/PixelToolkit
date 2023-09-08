@@ -1,7 +1,9 @@
+# Hashing library (Part of the PixelToolkit project)
 import hashlib
+import os
 
 
-def hash_input(input, buf_size=65536, algorithm="SHA256", output=None):
+def hash_input(input, buf_size, algorithm="SHA256", output=None):
     if algorithm.lower() not in hashlib.algorithms_guaranteed\
         or buf_size.isdigit() is False\
             or input is None:
@@ -9,7 +11,6 @@ def hash_input(input, buf_size=65536, algorithm="SHA256", output=None):
 
     output = None if output == "" else output
     buf_size = int(buf_size)
-    import os
     try:
         h = hashlib.new(algorithm)
         with open(input, "rb") as f:
@@ -21,14 +22,13 @@ def hash_input(input, buf_size=65536, algorithm="SHA256", output=None):
 
         if output is None:
             return h.hexdigest()
-        elif output is not None and not os.path.exists(output):
-            os.mknod(output)
+        elif output is not None:
             f = open(output, "w").write(h.hexdigest())
-        elif os.path.exists(output):
-            f = open(output, "w").write(h.hexdigest())
+
 
         return h.hexdigest()
 
+    # If the file open failed treat the input as a text
     except Exception:
         h = hashlib.new(algorithm)
         h.update(input.encode())
@@ -36,11 +36,9 @@ def hash_input(input, buf_size=65536, algorithm="SHA256", output=None):
 
         if output is None:
             return h.hexdigest()
-        elif output is not None and not os.path.exists(output):
-            os.mknod(output)
+        elif output is not None:
             f = open(output, "w").write(input_hash)
-        elif os.path.exists(output):
-            f = open(output, "w").write(input_hash)
+
 
         return input_hash
 
