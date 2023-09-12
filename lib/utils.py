@@ -1,4 +1,4 @@
-# Stuff that will be shared by more than one lib
+# Functionality that will be shared by more than one library
 
 import os
 import math
@@ -10,8 +10,7 @@ def copy_to_clipboard(string_to_copy):
         pyperclip.copy(string_to_copy)
     except ImportError:
         # Don't crash if pyperclip not installed
-        # TODO: log that copy wont work because pyperclip is not installed
-        pass
+        log("Pyperclip not installed. Clipboard related functionality won't work", LogUrgency.WARNING)
 
 
 # Helper for easy way of coloring terminal output
@@ -83,6 +82,7 @@ def calculate_tf(document: str):
             term_frequency[term] = 1
     return term_frequency
 
+
 # Calculate IDF (Inverse Document Frequency)
 def calculate_idf(documents: [str], term: str):
     document_count = len(documents)
@@ -90,6 +90,7 @@ def calculate_idf(documents: [str], term: str):
     if document_with_term == 0:
         return 0  # Term not present in any document
     return math.log(document_count / document_with_term)
+
 
 # Calculate TF-IDF (Term Frequency - Inverse Document Frequency)
 def calculate_tf_idf(document: str, documents: [str]):
@@ -100,14 +101,16 @@ def calculate_tf_idf(document: str, documents: [str]):
         tf_idf[term] = freq * idf
     return tf_idf
 
+
 def remove_special_characters(text: str):
     return "".join(char for char in text if char.isalnum() or char.isspace() or char in ['_', '-', '@', '$'])
 
+
 # Function to extract keywords from the provided text
 def extract_keywords(text: str, min: int = 1, max: int = 100):
-    keywords = calculate_tf_idf(text, [text]) # Treat the entire text as a single document
-    keywords = [remove_special_characters(keyword) for keyword in keywords] # Remove special characters
+    keywords = calculate_tf_idf(text, [text])  # Treat the entire text as a single document
+    keywords = [remove_special_characters(keyword) for keyword in keywords]  # Remove special characters
     # Remove empty elements + filter the keywords length to the expected range
     keywords = [keyword for keyword in keywords if keyword and len(keyword) in range(min, max + 1)]
-    keywords = list(set(keywords)) # Remove duplicates
+    keywords = list(set(keywords))  # Remove duplicates
     return keywords

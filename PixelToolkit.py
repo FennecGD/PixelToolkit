@@ -89,7 +89,7 @@ if __name__ == "__main__":
                 cli_error("You need to either provide a URL or a File path!")
             # Here we use print instead of cli_print because we want a plain text output
             print("\n".join(generator.results))
-        
+
         elif args.subcommand == "hash":
             from lib.hash import hash_input
             hashed = hash_input(input=args.input, buf_size=args.buf, algorithm=args.algorithm, output=args.output)

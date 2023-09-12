@@ -294,7 +294,6 @@ def make_hash(main_window):
         copy_button.config(command=lambda: copy_to_clipboard(result))
         copy_button.pack()
 
-
     entries = [
         tk.Label(hash_frame, text="File/String to hash"),
         EntryWithPlaceholder(hash_frame, "", textvariable=input_to_hash),
@@ -302,12 +301,13 @@ def make_hash(main_window):
         EntryWithPlaceholder(hash_frame, "", textvariable=algorithm),
         tk.Label(hash_frame, text="Prefered buf size"),
         EntryWithPlaceholder(hash_frame, "", textvariable=buf_size),
-        tk.Label(hash_frame, text="Output file name. If submitted empty, program will print your hash below with copy button"),
+        tk.Label(hash_frame, text="Output file name. If empty, program will display your hash below and a copy button"),
         EntryWithPlaceholder(hash_frame, "", textvariable=output),
         tk.Button(
             hash_frame,
             text="Submit Input",
-            command=lambda: forward_and_insert_hash_result(input=input_to_hash.get(), buf_size=buf_size.get(), algorithm=algorithm.get(), output=output.get()),
+            command=lambda: forward_and_insert_hash_result(input=input_to_hash.get(
+            ), buf_size=buf_size.get(), algorithm=algorithm.get(), output=output.get()),
         ),
     ]
     for entry in entries:
@@ -316,6 +316,7 @@ def make_hash(main_window):
     result_label = tk.Label(hash_frame, text="")
     result_label.pack()
     copy_button = tk.Button(hash_frame, text="Copy hash")
+
 
 def main_window_generator():
     root = tk.Tk()
@@ -361,6 +362,3 @@ def main_window_generator():
     hash_button.grid(row=2, column=2)
 
     root.mainloop()
-
-
-
