@@ -306,8 +306,8 @@ def make_hash(main_window):
         tk.Button(
             hash_frame,
             text="Submit Input",
-            command=lambda: forward_and_insert_hash_result(input=input_to_hash.get(
-            ), buf_size=buf_size.get(), algorithm=algorithm.get(), output=output.get()),
+            command=lambda: forward_and_insert_hash_result(input=input_to_hash.get(), buf_size=buf_size.get(),
+                                                           algorithm=algorithm.get(), output=output.get()),
         ),
     ]
     for entry in entries:
