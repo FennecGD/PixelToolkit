@@ -1,13 +1,12 @@
 # Hashing library (Part of the PixelToolkit project)
 import hashlib
-import os
 
 
 def hash_input(input, buf_size, algorithm="SHA256", output=None):
-    if algorithm.lower() not in hashlib.algorithms_guaranteed\
-        or buf_size.isdigit() is False\
+    if algorithm.lower() not in hashlib.algorithms_guaranteed \
+        or buf_size.isdigit() is False \
             or input is None:
-            return False
+        return False
 
     output = None if output == "" else output
     buf_size = int(buf_size)
@@ -25,7 +24,6 @@ def hash_input(input, buf_size, algorithm="SHA256", output=None):
         elif output is not None:
             f = open(output, "w").write(h.hexdigest())
 
-
         return h.hexdigest()
 
     # If the file open failed treat the input as a text
@@ -39,6 +37,4 @@ def hash_input(input, buf_size, algorithm="SHA256", output=None):
         elif output is not None:
             f = open(output, "w").write(input_hash)
 
-
         return input_hash
-
