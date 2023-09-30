@@ -1,6 +1,7 @@
 from lib.pass_gen import PasswordGenerator
 from lib.web_bruteforcer import WebBruteforcer
 from lib.wordlist_generator import WordlistGenerator
+from lib.web_crawler import WebCrawler
 from lib.utils import copy_to_clipboard
 from lib.port_scanner import scan_port_range
 from lib.hash import hash_input
@@ -318,6 +319,55 @@ def make_hash(main_window):
     copy_button = tk.Button(hash_frame, text="Copy hash")
 
 
+def make_web_crawler(main_window):
+    web_crawler_window = tk.Toplevel(main_window, bg=DEFAULT_BG_COLOR, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT)
+    web_crawler_window.resizable(False, False)
+    web_crawler_window.title("Web Crawler")
+
+    web_crawler_frame = tk.Frame(web_crawler_window)
+    web_crawler_frame.pack(fill=tk.BOTH, expand=True)
+
+    url = tk.StringVar()
+    max_depth = tk.StringVar(value=3)
+
+    scan_label = tk.Label(web_crawler_frame, text="Select fuzzing options", bg=DEFAULT_BG_COLOR, fg="#FFF")
+    scan_label.pack(fill=tk.X, expand=True)
+
+    def start_web_crawler(url: str, max_depth: int):
+        if not url:
+            print("ERROR: Wrong URL") # TODO: message box
+            return
+        web_crawler = WebCrawler()
+        web_crawler.crawl(url, int(max_depth))
+        if len(web_crawler.crawled) == 0:
+            result_label.insert(tk.END, "Crawling finished, no results.")
+        else:
+            # TODO: Find a way to gradually append more results as they are discovered instead of waiting for
+            #       the whole scan to finish.
+            result_label.insert(tk.END, "\n".join(web_crawler.crawled))
+
+    entries = [
+        tk.Label(web_crawler_frame, text="URL to crawl:"),
+        EntryWithPlaceholder(web_crawler_frame, "", textvariable=url),
+        tk.Label(web_crawler_frame, text="Maximum crawling depth:"),
+        EntryWithPlaceholder(web_crawler_frame, "", textvariable=max_depth),
+        tk.Button(
+            web_crawler_frame,
+            text="Start crawling",
+            command=lambda: start_web_crawler(url.get(), max_depth.get()),
+        ),
+    ]
+    for entry in entries:
+        entry.pack(fill=tk.X, expand=True)
+
+    result_label = tk.Text(web_crawler_frame)
+    result_label.pack(fill=tk.X, expand=True)
+
+    copy_button = tk.Button(web_crawler_window, text="Copy",
+                            command=lambda: copy_to_clipboard(result_label.get("1.0", "end-1c")))
+    copy_button.pack()
+
+
 def main_window_generator():
     root = tk.Tk()
     root.title("PixelToolkit")
@@ -360,5 +410,12 @@ def main_window_generator():
         command=lambda: make_hash(root),
     )
     hash_button.grid(row=2, column=2)
+
+    web_crawler_button = tk.Button(
+        root,
+        text="Web Crawler",
+        command=lambda: make_web_crawler(root),
+    )
+    web_crawler_button.grid(row=2, column=3)
 
     root.mainloop()

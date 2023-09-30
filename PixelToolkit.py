@@ -1,8 +1,10 @@
 #!/bin/python3
+
 import argparse
 from lib.pass_gen import PasswordGenerator
 from lib.web_bruteforcer import WebBruteforcer
 from lib.wordlist_generator import WordlistGenerator
+from lib.web_crawler import WebCrawler
 from lib.utils import Color, cli_print, MessageType, cli_error
 import multiprocessing
 import sys
@@ -45,6 +47,11 @@ if __name__ == "__main__":
     # TODO Implement automatic setting of buffer or remove buffer
     hash.add_argument("--buf", "-b", help="Size of chunks", default=4096, type=int)
     hash.add_argument("--output", "-o", help="Name for file containing output")
+
+    web_crawler = subparsers.add_parser("web-crawler", help="Web Crawler")
+    web_crawler.add_argument("--url", "-u", type=str, help="URL to crawl", required=True)
+    web_crawler.add_argument("--depth", "-d", type=int, help="Max crawling depth", default=3)
+    web_crawler.add_argument("--output", "-o", help="Output file")
 
     args = parser.parse_args()
     if len(sys.argv) == 1:  # If no arguments passed -> GUI
@@ -95,3 +102,10 @@ if __name__ == "__main__":
             hashed = hash_input(input=args.input, buf_size=args.buf, algorithm=args.algorithm, output=args.output)
             GREEN = Color.GREEN
             cli_print(f"{GREEN}Your hash: {hashed}", MessageType.NEW_ITEM)
+
+        elif args.subcommand == "web-crawler":
+            crawler = WebCrawler(cli=True)
+            crawler.crawl(args.url, args.depth)
+            if args.output:
+                with open(args.output, "w") as f:
+                    f.write("\n".join(crawler.crawled))
