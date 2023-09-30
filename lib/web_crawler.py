@@ -15,7 +15,7 @@ class WebCrawler:
         if url in self.crawled:
             return
         self.crawled.append(url)
-        log(f"Crawning {url}", LogUrgency.INFO)
+        log(f"Crawling {url}", LogUrgency.INFO)
         try:
             request_data = requests.get(url)
             if request_data and self.cli:

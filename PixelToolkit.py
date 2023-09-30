@@ -1,4 +1,5 @@
 #!/bin/python3
+
 import argparse
 from lib.pass_gen import PasswordGenerator
 from lib.web_bruteforcer import WebBruteforcer
