@@ -1,7 +1,8 @@
 # Functionality that will be shared by more than one library
 
-import os
 import math
+import os
+import re
 
 
 def copy_to_clipboard(string_to_copy):
@@ -11,6 +12,10 @@ def copy_to_clipboard(string_to_copy):
     except ImportError:
         # Don't crash if pyperclip not installed
         log("Pyperclip not installed. Clipboard related functionality won't work", LogUrgency.WARNING)
+
+
+def validate_url(url: str) -> bool:
+    return re.match(re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'), url)
 
 
 # Helper for easy way of coloring terminal output
