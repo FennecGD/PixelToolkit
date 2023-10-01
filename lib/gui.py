@@ -112,7 +112,7 @@ def make_password_generator(main_window):
             messagebox.showerror("Error", "Invalid input provided")
             # We shouldn't be able to copy if input was incorrect
             copy_button.destroy()
-            submit_button.pack(row=3, column=1)
+            submit_button.pack()
 
     submit_button = tk.Button(
         password_generator_window, text="Submit", command=on_submit
