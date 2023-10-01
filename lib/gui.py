@@ -246,7 +246,7 @@ def make_web_brute(main_window):
                 "You need to specify a correct URL, including the 'FUZZ' keyword",
             )
         elif len(results) == 0:
-            result_label.config(text="\nFuzzing finished, no results.\n")
+            messagebox.showinfo("Fuzzing finished", "\nFuzzing finished, no results.\n")
         else:
             # TODO: Find a way to gradually append more results as they are discovered instead of waiting for
             #       the whole scan to finish.
