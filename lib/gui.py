@@ -172,10 +172,10 @@ def make_port_scan(main_window):
                     "Scanning info", "There were not any open ports on specified range"
                 )
             else:
+                result_label.config(text=f"\nOpen ports for {host_address}: \n")
                 scan_results.insert(
                     tk.END,
-                    f"Open ports for {host_address}\n"
-                    + "\n".join(list(map(lambda x: str(x), result))),
+                    "\n".join(list(map(lambda x: str(x), result))),
                 )
 
     widgets = [
@@ -195,6 +195,9 @@ def make_port_scan(main_window):
         ),
     ]
     pack_widgets(widgets)
+
+    result_label = tk.Label(port_scan_frame)
+    result_label.pack(fill=tk.X, expand=True)
 
     scan_results = tk.Text(port_scan_frame)
     scan_results.pack(fill=tk.X, expand=True)
@@ -243,12 +246,13 @@ def make_web_brute(main_window):
                 "You need to specify a correct URL, including the 'FUZZ' keyword",
             )
         elif len(results) == 0:
-            web_brute_results.insert(tk.END, "Fuzzing finished, no results.")
+            result_label.config(text="\nFuzzing finished, no results.\n")
         else:
             # TODO: Find a way to gradually append more results as they are discovered instead of waiting for
             #       the whole scan to finish.
+            result_label.config(text="\nDiscovered endpoints:\n")
             web_brute_results.insert(
-                tk.END, "Discovered endpoints:\n" + "\n".join(results)
+                tk.END, "\n".join(results)
             )
 
     widgets = [
@@ -273,6 +277,9 @@ def make_web_brute(main_window):
         ),
     ]
     pack_widgets(widgets)
+
+    result_label = tk.Label(web_brute_frame)
+    result_label.pack(fill=tk.X, expand=True)
 
     web_brute_results = tk.Text(web_brute_frame)
     web_brute_results.pack(fill=tk.X, expand=True)
