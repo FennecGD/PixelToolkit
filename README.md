@@ -9,7 +9,7 @@ PixelToolkit project
 - [ ] Archive Password Cracker
 - [x] Port Scanner
 - [x] Web Bruteforcer
-- [ ] Web Crawler
+- [x] Web Crawler
 - [x] Wordlist Generator
 
 # License
