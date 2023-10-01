@@ -174,7 +174,7 @@ def make_port_scan(main_window):
             else:
                 scan_results.insert(
                     tk.END,
-                    f"Open ports for " + host_address + "\n"
+                    f"Open ports for {host_address}\n"
                     + "\n".join(list(map(lambda x: str(x), result))),
                 )
 
