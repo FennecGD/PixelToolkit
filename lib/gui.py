@@ -3,7 +3,7 @@ import multiprocessing
 from lib.pass_gen import PasswordGenerator
 from lib.port_scanner import scan_port_range
 from lib.utils import copy_to_clipboard
-from lib.utils import validate_url
+from lib.utils import is_valid_url
 from lib.web_bruteforcer import WebBruteforcer
 from lib.web_crawler import WebCrawler
 from lib.wordlist_generator import WordlistGenerator
@@ -174,7 +174,7 @@ def make_port_scan(main_window):
             else:
                 scan_results.insert(
                     tk.END,
-                    "Open ports for specified host\n"
+                    f"Open ports for " + host_address + "\n"
                     + "\n".join(list(map(lambda x: str(x), result))),
                 )
 
@@ -309,11 +309,11 @@ def make_wordlist_gen(main_window):
     scan_label.pack(fill=tk.X, expand=True)
 
     def validate_wordlist_input(url: str, file: str, min: int, max: int) -> bool:
-        if url and validate_url(url) is False:
+        if url and is_valid_url(url) is False:
             messagebox.showerror("Error", "Privided url is invalid.")
         elif file and isfile(file) is False:
             messagebox.showerror("Error", "Provided filepath is invalid.")
-        elif min.isdigit() is False or min.isdigit() is False:
+        elif min.isdigit() is False or max.isdigit() is False:
             messagebox.showerror("Error", "Min and max have to be digits.")
         elif int(min) > int(max):
             messagebox.showerror(
@@ -327,12 +327,12 @@ def make_wordlist_gen(main_window):
 
         if validate_wordlist_input(url, file, min, max):
             generator = WordlistGenerator()
-            res = generator.gen(url, file, int(min), int(max))
-            if not res:
+            succeeded = generator.gen(url, file, int(min), int(max))
+            if not succeeded:
                 messagebox.showerror("Error", "Something went wrong")
             results = generator.results
             if len(results) == 0:
-                wordlist_result.insert(tk.END, "Generation finished, no keywords found")
+                messagebox.showinfo("No keywords", "Generation finished, no keywords found")
             else:
                 wordlist_result.insert(tk.END, "\n".join(results))
 

@@ -18,7 +18,7 @@ def copy_to_clipboard(string_to_copy):
         )
 
 
-def validate_url(url: str) -> bool:
+def is_valid_url(url: str) -> bool:
     return re.match(
         re.compile(
             r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
