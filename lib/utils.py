@@ -1,16 +1,30 @@
 # Functionality that will be shared by more than one library
 
-import os
 import math
+import os
+import re
 
 
 def copy_to_clipboard(string_to_copy):
     try:
         import pyperclip
+
         pyperclip.copy(string_to_copy)
     except ImportError:
         # Don't crash if pyperclip not installed
-        log("Pyperclip not installed. Clipboard related functionality won't work", LogUrgency.WARNING)
+        log(
+            "Pyperclip not installed. Clipboard related functionality won't work",
+            LogUrgency.WARNING,
+        )
+
+
+def is_valid_url(url: str) -> bool:
+    return re.match(
+        re.compile(
+            r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
+        ),
+        url,
+    )
 
 
 # Helper for easy way of coloring terminal output
@@ -52,12 +66,16 @@ IS_DEBUG_ENV_VAR_SET = os.environ.get("DEBUG") is not None
 def log(string_to_log, urgency=LogUrgency.INFO):
     if IS_DEBUG_ENV_VAR_SET:
         import datetime
+
         timestamp = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-        print(f"{Color.GRAY}[{timestamp}] [{urgency}{Color.GRAY}]{Color.WHITE} {string_to_log}")
+        print(
+            f"{Color.GRAY}[{timestamp}] [{urgency}{Color.GRAY}]{Color.WHITE} {string_to_log}"
+        )
 
 
 def cli_error(message: str):
     import sys
+
     print(f"[{Color.RED}!{Color.RESET}] {message}", file=sys.stderr)
     exit(1)
 
@@ -103,14 +121,26 @@ def calculate_tf_idf(document: str, documents: [str]):
 
 
 def remove_special_characters(text: str):
-    return "".join(char for char in text if char.isalnum() or char.isspace() or char in ['_', '-', '@', '$'])
+    return "".join(
+        char
+        for char in text
+        if char.isalnum() or char.isspace() or char in ["_", "-", "@", "$"]
+    )
 
 
 # Function to extract keywords from the provided text
 def extract_keywords(text: str, min: int = 1, max: int = 100):
-    keywords = calculate_tf_idf(text, [text])  # Treat the entire text as a single document
-    keywords = [remove_special_characters(keyword) for keyword in keywords]  # Remove special characters
+    keywords = calculate_tf_idf(
+        text, [text]
+    )  # Treat the entire text as a single document
+    keywords = [
+        remove_special_characters(keyword) for keyword in keywords
+    ]  # Remove special characters
     # Remove empty elements + filter the keywords length to the expected range
-    keywords = [keyword for keyword in keywords if keyword and len(keyword) in range(min, max + 1)]
+    keywords = [
+        keyword
+        for keyword in keywords
+        if keyword and len(keyword) in range(min, max + 1)
+    ]
     keywords = list(set(keywords))  # Remove duplicates
     return keywords

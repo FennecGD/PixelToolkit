@@ -3,9 +3,11 @@ import hashlib
 
 
 def hash_input(input, buf_size, algorithm="SHA256", output=None):
-    if algorithm.lower() not in hashlib.algorithms_guaranteed \
-        or buf_size.isdigit() is False \
-            or input is None:
+    if (
+        algorithm.lower() not in hashlib.algorithms_guaranteed
+        or buf_size.isdigit() is False
+        or input is None
+    ):
         return False
 
     output = None if output == "" else output
