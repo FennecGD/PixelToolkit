@@ -1,18 +1,10 @@
 # PixelToolkit
 
-PixelToolkit project
+PixelToolkit project is meant to be simple set of tools for ethical hackers.
+Our toolkit offers fully functional graphical user interface and command line interface for every module currently available.
 
-# Ideas for new modules
 
-- [ ] Scientific Calculator
-- [ ] Password Hash Cracker
-- [ ] Archive Password Cracker
-- [x] Port Scanner
-- [x] Web Bruteforcer
-- [x] Web Crawler
-- [x] Wordlist Generator
-
-# Available modules
+## Available modules
 
 ### Password Generator (GUI)
 ![Screenshot from 2023-10-13 15-13-48](https://github.com/GrzegorzSzczepanek/PixelToolkit/assets/113286903/aa023d93-b2ed-4668-875d-4e8bc0f36295)
@@ -59,6 +51,11 @@ PixelToolkit project
 ### Web Crawler (CLI)
 ![Screenshot from 2023-10-13 15-51-27](https://github.com/GrzegorzSzczepanek/PixelToolkit/assets/113286903/d8810fd7-cefd-49f4-8751-63c932c27fb4)
 
+## Future modules
+
+- [ ] Scientific Calculator
+- [ ] Password Hash Cracker
+- [ ] Archive Password Cracker
 
 
 # License
