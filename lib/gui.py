@@ -130,7 +130,7 @@ def make_port_scan(main_window):
     port_scan_frame = tk.Frame(port_scan_window)
     port_scan_frame.pack(fill=tk.BOTH, expand=True)
 
-    host = tk.StringVar(value="127.0.0.1")
+    host = tk.StringVar(value="127.0.0.1 or 10.0.0.1-192.168.0.1 if you want a range")
     port_range = tk.StringVar(value="1-65535")
     threads = tk.StringVar(value=multiprocessing.cpu_count())
 
@@ -140,19 +140,27 @@ def make_port_scan(main_window):
     scan_label.pack(fill=tk.X, expand=True)
 
     def validate_input(host_address, ports_range, n_threads):
-        host_address = host_address.replace("default: ", "")
-        ports_range = ports_range.replace("default: ", "")
-        n_threads = n_threads.replace("default: ", "")
+        host_address = host_address.replace("Example: ", "")
+        ports_range = ports_range.replace("Default: ", "")
+        n_threads = n_threads.replace("Default: ", "")
         import re
 
-        regex = r"^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$"
+        address_regex = r"^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$"
         ports = ports_range.split("-")
 
         lower_port = ports[0]
         upper_port = ports[1]
-        if not re.match(regex, host_address):
+        print("153 line")
+        if '-' in host_address:
+            [lower_address, upper_address] = host_address.split("-")
+            print(lower_address, upper_address)
+            if not (re.match(address_regex, lower_address) and re.match(address_regex, upper_address)):
+                messagebox.showerror("Error", "Invalid host adress")
+                print("159 line")
+
+        elif not re.match(address_regex, host_address):
             messagebox.showerror("Error", "Invalid host adress")
-        elif (
+        if (
             len(ports) != 2
             or (lower_port.isdigit() is False or upper_port.isdigit() is False)
             or (int(lower_port) < 0 or int(upper_port) < 0)
@@ -180,14 +188,14 @@ def make_port_scan(main_window):
 
     widgets = [
         tk.Label(port_scan_frame, text="Enter host adress: "),
-        EntryWithPlaceholder(port_scan_frame, "default: ", textvariable=host),
+        EntryWithPlaceholder(port_scan_frame, "Example: ", textvariable=host),
         tk.Label(port_scan_frame, text="Enter ports range to scan: "),
-        EntryWithPlaceholder(port_scan_frame, "default: ", textvariable=port_range),
+        EntryWithPlaceholder(port_scan_frame, "Default: ", textvariable=port_range),
         tk.Label(
             port_scan_frame,
             text="Enter amount of threads that will be used for scanning: ",
         ),
-        EntryWithPlaceholder(port_scan_frame, "default: ", textvariable=threads),
+        EntryWithPlaceholder(port_scan_frame, "Default: ", textvariable=threads),
         tk.Button(
             port_scan_frame,
             text="Scan Ports",
