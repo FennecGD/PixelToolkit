@@ -74,12 +74,6 @@ if __name__ == "__main__":
             if len(open_ports) == 0:
                 cli_print("There were no open ports on specified range", MessageType.INFO)
             else:
-                RESET = Color.RESET
-                GREEN = Color.GREEN
-                GRAY = Color.GRAY
-                BLUE = Color.BLUE
-                for port in open_ports:
-                    cli_print(f"{GRAY}({host}){RESET}\tOpen port: {BLUE}{port}{RESET}", MessageType.NEW_ITEM)
                 cli_print("Port scan finished", MessageType.INFO)
 
         elif args.subcommand == "web-brute":
