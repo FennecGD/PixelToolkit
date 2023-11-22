@@ -71,15 +71,16 @@ if __name__ == "__main__":
             start_port, end_port = int(start_port), int(end_port)
 
             open_ports = scan_port_range(host, start_port, end_port, threads)
+            print(open_ports)
             if len(open_ports) == 0:
                 cli_print("There were no open ports on specified range", MessageType.INFO)
             else:
-                RESET = Color.RESET
-                GREEN = Color.GREEN
-                GRAY = Color.GRAY
-                BLUE = Color.BLUE
-                for port in open_ports:
-                    cli_print(f"{GRAY}({host}){RESET}\tOpen port: {BLUE}{port}{RESET}", MessageType.NEW_ITEM)
+                # RESET = Color.RESET
+                # GREEN = Color.GREEN
+                # GRAY = Color.GRAY
+                # BLUE = Color.BLUE
+                # for port in open_ports:
+                #     cli_print(f"{GRAY}({host}){RESET}\tOpen port: {BLUE}{port}{RESET}", MessageType.NEW_ITEM)
                 cli_print("Port scan finished", MessageType.INFO)
 
         elif args.subcommand == "web-brute":
