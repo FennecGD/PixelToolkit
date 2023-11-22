@@ -9,7 +9,7 @@ import threading
 def scan_port(host, port) -> bool:
     try:
         sock = socket.socket()
-        sock.settimeout(1)
+        sock.settimeout(0.0001)
         sock.connect((host, port))
         sock.close()
         return True
@@ -20,8 +20,6 @@ def scan_port(host, port) -> bool:
 def scan_thread(host, t_port_start, t_port_end, results):
     try:
         for port in range(t_port_start, t_port_end + 1):
-            # if host != "192.168.0.1":
-                # print(port)
             if scan_port(host, port):
                 RESET = Color.RESET
                 GRAY = Color.GRAY
@@ -30,8 +28,6 @@ def scan_thread(host, t_port_start, t_port_end, results):
                 results.append(f"{host} : {port}")
     except Exception as e:
         print(f"Exception in scan_thread: {e}")
-
-    return
 
 
 def forward_scanning(host, n_threads, step, start, end):
@@ -48,23 +44,20 @@ def forward_scanning(host, n_threads, step, start, end):
 
     for thread in threads:
         thread.join()
-        # print(thread)
 
-    print(threads)
-    print(host)
-    threads.clear
     return results
 
 
 def scan_ip_range(lower_address, upper_address, n_threads, step, start, end):
-    # print(upper_address, type(upper_address))
+    ports = []
     for ip_int in range(lower_address, upper_address + 1):
         host = ipaddress.IPv4Address(ip_int)
-        forward_scanning(host, n_threads, step, start, end)
+        ports.append("\n".join(forward_scanning(host, n_threads, step, start, end)))
+
+    return ports
 
 
 def scan_port_range(host, start_port, end_port, n_threads):
-    # log(f"Port scanning started. host={host} range={start_port}-{end_port} n_threads={n_threads}", LogUrgency.INFO)
     ports = []
     start, end = start_port, end_port
     step = (end - start + 1) // n_threads
@@ -90,5 +83,4 @@ def scan_port_range(host, start_port, end_port, n_threads):
         else:
             ports = forward_scanning(host, n_threads, step, start, end)
 
-    print(ports)
     return ports

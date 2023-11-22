@@ -71,7 +71,6 @@ if __name__ == "__main__":
             start_port, end_port = int(start_port), int(end_port)
 
             open_ports = scan_port_range(host, start_port, end_port, threads)
-            print(open_ports)
             if len(open_ports) == 0:
                 cli_print("There were no open ports on specified range", MessageType.INFO)
             else:
