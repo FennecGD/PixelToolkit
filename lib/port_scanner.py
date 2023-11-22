@@ -58,6 +58,7 @@ def scan_ip_range(lower_address, upper_address, n_threads, step, start, end):
 
 
 def scan_port_range(host, start_port, end_port, n_threads):
+    log(f"Port scanning started. host={host} range={start_port}-{end_port} n_threads={n_threads}", LogUrgency.INFO)
     ports = []
     start, end = start_port, end_port
     step = (end - start + 1) // n_threads

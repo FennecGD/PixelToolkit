@@ -150,13 +150,11 @@ def make_port_scan(main_window):
 
         lower_port = ports[0]
         upper_port = ports[1]
-        print("153 line")
         if '-' in host_address:
             [lower_address, upper_address] = host_address.split("-")
             print(lower_address, upper_address)
             if not (re.match(address_regex, lower_address) and re.match(address_regex, upper_address)):
                 messagebox.showerror("Error", "Invalid host adress")
-                print("159 line")
 
         elif not re.match(address_regex, host_address):
             messagebox.showerror("Error", "Invalid host adress")
