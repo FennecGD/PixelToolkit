@@ -152,7 +152,6 @@ def make_port_scan(main_window):
         upper_port = ports[1]
         if '-' in host_address:
             [lower_address, upper_address] = host_address.split("-")
-            print(lower_address, upper_address)
             if not (re.match(address_regex, lower_address) and re.match(address_regex, upper_address)):
                 messagebox.showerror("Error", "Invalid host adress")
 
