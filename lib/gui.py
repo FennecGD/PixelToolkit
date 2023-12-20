@@ -55,6 +55,19 @@ DEFAULT_HEIGHT = 600
 # Functions will be invoked after clicking button in main PixelToolkitFile
 
 
+def make_top_level(main_window, window_title):
+    top_level_window = tk.Toplevel(
+        main_window, bg=DEFAULT_BG_COLOR, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT
+    )
+    top_level_window.resizable(False, False)
+    top_level_window.title(window_title)
+
+    top_level_frame = tk.Frame(top_level_window)
+    top_level_frame.pack(fill=tk.BOTH, expand=True)
+
+    return top_level_window, top_level_frame
+
+
 def pack_widgets(widgets_arr):
     for widget in widgets_arr:
         widget.pack(fill=tk.X, expand=True)
@@ -62,17 +75,12 @@ def pack_widgets(widgets_arr):
 
 def make_password_generator(main_window):
     font = ("Tahoma", 15)
-    password_generator_window = tk.Toplevel(
-        main_window, bg=DEFAULT_BG_COLOR, width=600, height=600
-    )
-    password_generator_window.resizable(False, False)
-    password_generator_window.title("Password Generator")
-
+    password_generator_window, password_frame = make_top_level(main_window, "Password Generator")
     user_input = tk.StringVar()
 
     widgets = [
         tk.Label(
-            password_generator_window,
+            password_frame,
             text="Provide password length:",
             font=font,
             fg="#EEE",
@@ -82,7 +90,7 @@ def make_password_generator(main_window):
             wraplength=250,
         ),
         EntryWithPlaceholder(
-            password_generator_window,
+            password_frame,
             "Only numbers bigger than 1",
             textvariable=user_input,
         ),
@@ -121,14 +129,7 @@ def make_password_generator(main_window):
 
 
 def make_port_scan(main_window):
-    port_scan_window = tk.Toplevel(
-        main_window, bg=DEFAULT_BG_COLOR, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT
-    )
-    port_scan_window.resizable(False, False)
-    port_scan_window.title("Port Scanner")
-
-    port_scan_frame = tk.Frame(port_scan_window)
-    port_scan_frame.pack(fill=tk.BOTH, expand=True)
+    port_scan_window, port_scan_frame = make_top_level(main_window, "Port Scanner")
 
     host = tk.StringVar(value="127.0.0.1 or 10.0.0.1-192.168.0.1 if you want a range")
     port_range = tk.StringVar(value="1-65535")
@@ -220,14 +221,7 @@ def make_port_scan(main_window):
 
 
 def make_web_brute(main_window):
-    web_brute_window = tk.Toplevel(
-        main_window, bg=DEFAULT_BG_COLOR, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT
-    )
-    web_brute_window.resizable(False, False)
-    web_brute_window.title("Web Content Bruteforcer")
-
-    web_brute_frame = tk.Frame(web_brute_window)
-    web_brute_frame.pack(fill=tk.BOTH, expand=True)
+    web_brute_window, web_brute_frame = make_top_level(main_window, "Web Bruteforcer")
 
     url = tk.StringVar()
     wordlist = tk.StringVar()
@@ -298,14 +292,7 @@ def make_web_brute(main_window):
 
 
 def make_wordlist_gen(main_window):
-    wordlist_gen_window = tk.Toplevel(
-        main_window, bg=DEFAULT_BG_COLOR, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT
-    )
-    wordlist_gen_window.resizable(False, False)
-    wordlist_gen_window.title("Wordlist Generator")
-
-    wordlist_gen_frame = tk.Frame(wordlist_gen_window)
-    wordlist_gen_frame.pack(fill=tk.BOTH, expand=True)
+    wordlist_gen_window, wordlist_gen_frame = make_top_level(main_window, "Wordlist Generator")
 
     url = tk.StringVar()
     file = tk.StringVar()
@@ -379,14 +366,7 @@ def make_wordlist_gen(main_window):
 
 
 def make_hash(main_window):
-    hash_window = tk.Toplevel(
-        main_window, bg=DEFAULT_BG_COLOR, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT
-    )
-    hash_window.resizable(False, False)
-    hash_window.title("File and text hasher")
-
-    hash_frame = tk.Frame(hash_window)
-    hash_frame.pack(fill=tk.BOTH, expand=True)
+    hash_window, hash_frame = make_top_level(main_window, "Hash")
 
     input_to_hash = tk.StringVar(value=None)
     algorithm = tk.StringVar(value="SHA256")
@@ -432,15 +412,12 @@ def make_hash(main_window):
     copy_button = tk.Button(hash_frame, text="Copy hash")
 
 
-def make_web_crawler(main_window):
-    web_crawler_window = tk.Toplevel(
-        main_window, bg=DEFAULT_BG_COLOR, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT
-    )
-    web_crawler_window.resizable(False, False)
-    web_crawler_window.title("Web Crawler")
+def make_hash_cracker(main_window):
+    pass
 
-    web_crawler_frame = tk.Frame(web_crawler_window)
-    web_crawler_frame.pack(fill=tk.BOTH, expand=True)
+
+def make_web_crawler(main_window):
+    web_crawler_window, web_crawler_frame = make_top_level(main_window)
 
     url = tk.StringVar()
     max_depth = tk.StringVar(value=3)
