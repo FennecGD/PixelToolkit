@@ -417,7 +417,7 @@ def make_hash_cracker(main_window):
 
 
 def make_web_crawler(main_window):
-    web_crawler_window, web_crawler_frame = make_top_level(main_window)
+    web_crawler_window, web_crawler_frame = make_top_level(main_window, "Web Crawler")
 
     url = tk.StringVar()
     max_depth = tk.StringVar(value=3)
@@ -474,46 +474,18 @@ def main_window_generator():
     # When we'll know how we'll want to set them up, I'll automate placing them and generating them with class
     # Maybe we could group buttons by categories like networking, cryptography, visualization and display them
     # with for loop
-    password_button = tk.Button(
-        root,
-        text="Password generator",
-        command=lambda: make_password_generator(root),
-    )
-    password_button.grid(row=1, column=1)
-
-    port_scan_button = tk.Button(
-        root,
-        text="Port Scanner",
-        command=lambda: make_port_scan(root),
-    )
-    port_scan_button.grid(row=1, column=2)
-
-    web_brute_button = tk.Button(
-        root,
-        text="Web Content Bruteforcer",
-        command=lambda: make_web_brute(root),
-    )
-    web_brute_button.grid(row=1, column=3)
-
-    wordlist_gen_button = tk.Button(
-        root,
-        text="Wordlist Generator",
-        command=lambda: make_wordlist_gen(root),
-    )
-    wordlist_gen_button.grid(row=2, column=1)
-
-    hash_button = tk.Button(
-        root,
-        text="Hash file or string",
-        command=lambda: make_hash(root),
-    )
-    hash_button.grid(row=2, column=2)
-
-    web_crawler_button = tk.Button(
-        root,
-        text="Web Crawler",
-        command=lambda: make_web_crawler(root),
-    )
-    web_crawler_button.grid(row=2, column=3)
+    modules = {"Password Generator": make_password_generator,
+               "Port Scanner": make_port_scan,
+               "Web Content Bruteforcer": make_web_brute,
+               "Wordlist Generator": make_wordlist_gen,
+               "Hash": make_hash,
+               "Web Crawler": make_web_crawler
+               }
+    for module_name, module in modules.items():
+        tk.Button(
+            root,
+            text=module_name,
+            command=lambda module=module: module(root)
+        ).pack()
 
     root.mainloop()
