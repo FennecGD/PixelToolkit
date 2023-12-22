@@ -1,5 +1,6 @@
 from lib.hash import hash_input
 import multiprocessing
+from lib.hash_crack import crack
 from lib.pass_gen import PasswordGenerator
 from lib.port_scanner import scan_port_range
 from lib.utils import copy_to_clipboard
@@ -11,12 +12,12 @@ import tkinter as tk
 from tkinter import messagebox
 from os.path import isfile
 
-
 # TODO Add keybindings to make GUI usable with keyboard
-
 
 # This class allows us to create entries with placeholders
 # so it can provide more detail to use wihout additional labels.
+
+
 class EntryWithPlaceholder(tk.Entry):
     def __init__(
         self, master=None, placeholder="PLACEHOLDER", textvariable=None, color="grey"
@@ -96,6 +97,7 @@ def make_password_generator(main_window):
         ),
     ]
     pack_widgets(widgets)
+
     password_result = tk.Text(password_generator_window)
     password_result.pack(fill=tk.X, expand=True)
 
@@ -413,7 +415,33 @@ def make_hash(main_window):
 
 
 def make_hash_cracker(main_window):
-    pass
+    hash_cracker_window, hash_cracker_frame = make_top_level(main_window, "Hash Cracker")
+    hash_to_crack = tk.StringVar(value=None)
+    wordlist_path = tk.StringVar(value="Default")
+    hash_algorithm = tk.StringVar(value="SHA256")
+
+    def forward_and_crack_hash(hash, wordlist, hash_algorithm):
+        result = crack(hash, wordlist, hash_algorithm)
+        result_hash_crack.delete("1.0", "end-1c")
+        result_hash_crack.insert(tk.END, str(result))
+
+    widgets = [
+        tk.Label(hash_cracker_frame, text="Hash to crack"),
+        EntryWithPlaceholder(hash_cracker_frame, "", textvariable=hash_to_crack),
+        tk.Label(hash_cracker_frame, text="Wordlist Path"),
+        EntryWithPlaceholder(hash_cracker_frame, "", textvariable=wordlist_path),
+        tk.Label(hash_cracker_frame, text="Hash Type"),
+        EntryWithPlaceholder(hash_cracker_frame, "", textvariable=hash_algorithm),
+        tk.Button(
+            hash_cracker_window,
+            text="Crack the hash",
+            command=lambda: forward_and_crack_hash(hash_to_crack.get(), wordlist_path.get(), hash_algorithm.get()),
+        ),
+    ]
+    pack_widgets(widgets)
+    result_hash_crack = tk.Text(hash_cracker_frame)
+    result_hash_crack.pack()
+    copy_button = tk.Button(hash_cracker_frame, text="Copy cracked hash")
 
 
 def make_web_crawler(main_window):
@@ -479,13 +507,16 @@ def main_window_generator():
                "Web Content Bruteforcer": make_web_brute,
                "Wordlist Generator": make_wordlist_gen,
                "Hash": make_hash,
-               "Web Crawler": make_web_crawler
+               "Crack Hashes": make_hash_cracker,
+               "Web Crawler": make_web_crawler,
                }
     for module_name, module in modules.items():
-        tk.Button(
+        button = tk.Button(
             root,
             text=module_name,
-            command=lambda module=module: module(root)
-        ).pack()
+            command=lambda module=module: module(root),
+        )
+        button.bind('<Return>', lambda event, module=module: module(root))
+        button.pack()
 
     root.mainloop()
