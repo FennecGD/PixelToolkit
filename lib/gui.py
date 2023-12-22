@@ -441,7 +441,7 @@ def make_hash_cracker(main_window):
     pack_widgets(widgets)
     result_hash_crack = tk.Text(hash_cracker_frame)
     result_hash_crack.pack()
-    copy_button = tk.Button(hash_cracker_frame, text="Copy cracked hash")
+    copy_button = tk.Button(hash_cracker_frame, text="Copy cracked plaintext")
 
 
 def make_web_crawler(main_window):
