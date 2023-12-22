@@ -1,6 +1,9 @@
 # Hash cracking library (Part of the PixelToolkit project)
 import hashlib
 from lib.utils import log
+import os
+
+DEFAULT_WORDLIST = "lib/wordlist.txt"
 
 
 def crack(hash: str, wordlist_path: str, hash_type: str = "md5"):
@@ -26,7 +29,11 @@ def crack(hash: str, wordlist_path: str, hash_type: str = "md5"):
     elif hash_type.lower() == "blake2s":
         hash_func = hashlib.blake2s
 
-    wordlist = open(wordlist_path, "r").read().splitlines()
+    if os.path.isfile(wordlist_path):
+        wordlist = open(wordlist_path, "r").read().splitlines()
+    else:
+        wordlist = open(DEFAULT_WORDLIST, "r").read().splitlines()
+
     for word in wordlist:
         if str(hash_func(word.encode()).hexdigest()) == hash:
             return word
