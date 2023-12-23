@@ -109,6 +109,15 @@ if __name__ == "__main__":
         help="Path to a wordlist",
         default="lib/wordlist.txt",
     )
+
+    remote_shell = subparsers.add_parser("remote-shell", help="Remote Shell")
+    remote_shell.add_argument('-c', '--command', action='store_true', help='command shell')
+    remote_shell.add_argument('-e', '--execute', help='execute specified command')
+    remote_shell.add_argument('-l', '--listen', action='store_true', help='listen')
+    remote_shell.add_argument('-p', '--port', type=int, default=5555, help='specified port')
+    remote_shell.add_argument('-t', '--target', default='192.168.0.189', help='specified IP')
+    remote_shell.add_argument('-u', '--upload', help='upload file')
+
     # TODO: hash_crack bruteforce
 
     args = parser.parse_args()
@@ -189,3 +198,14 @@ if __name__ == "__main__":
                     f"Cracked hash: {Color.GREEN}{cracked}{Color.RESET}",
                     MessageType.NEW_ITEM,
                 )
+
+        elif args.subcommand == "remote-shell":
+            from lib.remote_shell import RemoteShell
+
+            if args.listen:
+                buffer = ""
+            else:
+                buffer = sys.stdin.read()
+
+            rs = RemoteShell(args, buffer.encode())
+            rs.run()
