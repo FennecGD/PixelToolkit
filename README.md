@@ -53,8 +53,11 @@ Our toolkit offers fully functional graphical user interface and command line in
 ### Hash Cracker (GUI)
 ![image](https://github.com/GrzegorzSzczepanek/PixelToolkit/assets/113286903/f908ab4e-3142-48af-96d9-3df50262ec9e)
 
-### Hash Cracker (CLI.)
+### Hash Cracker (CLI)
 ![image](https://github.com/GrzegorzSzczepanek/PixelToolkit/assets/113286903/ca15c662-7a50-49d7-8804-b950046db19f)
+
+### Remote Shell (CLI)
+![image](https://github.com/GrzegorzSzczepanek/PixelToolkit/assets/113286903/a0655fdb-c6c9-4d6b-9a8d-431f28bb5cd1)
 
 
 ## Future modules
