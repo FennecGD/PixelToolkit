@@ -28,7 +28,6 @@ Our toolkit offers fully functional graphical user interface and command line in
 
 ### Wordlist Generator (CLI)
 ![Screenshot from 2023-10-13 15-46-37](https://github.com/GrzegorzSzczepanek/PixelToolkit/assets/113286903/bb1738a7-b4cf-4c0c-a05f-89df64aa7b72)
-![Web Crawler](<Screenshot from 2023-10-13 15-51-27.png>)
 
 ### Web Bruteforcer (GUI)
 ![Screenshot from 2023-10-13 15-39-07](https://github.com/GrzegorzSzczepanek/PixelToolkit/assets/113286903/49bacedb-c226-465c-bb5b-e0719288a4f5)
@@ -51,9 +50,15 @@ Our toolkit offers fully functional graphical user interface and command line in
 ### Web Crawler (CLI)
 ![Screenshot from 2023-10-13 15-51-27](https://github.com/GrzegorzSzczepanek/PixelToolkit/assets/113286903/d8810fd7-cefd-49f4-8751-63c932c27fb4)
 
+### Hash Cracker (GUI)
+![image](https://github.com/GrzegorzSzczepanek/PixelToolkit/assets/113286903/f908ab4e-3142-48af-96d9-3df50262ec9e)
+
+### Hash Cracker (CLI.)
+![image](https://github.com/GrzegorzSzczepanek/PixelToolkit/assets/113286903/ca15c662-7a50-49d7-8804-b950046db19f)
+
+
 ## Future modules
 
-- [ ] Scientific Calculator
 - [ ] Password Hash Cracker
 - [ ] Archive Password Cracker
 
