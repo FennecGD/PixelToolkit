@@ -14,7 +14,6 @@ def execute(command):
     return output.decode()
 
 
-# TODO better name
 class RemoteShell:
     def __init__(self, args, buffer=None):
         self.args = args
@@ -29,7 +28,7 @@ class RemoteShell:
             self.send()
 
     def send(self):
-        self.socket.connect((self.args.target, self.args.port))
+        self.socket.connect((self.args.address, self.args.port))
         if self.buffer:
             self.socket.send(self.buffer)
 
@@ -55,7 +54,7 @@ class RemoteShell:
             sys.exit()
 
     def listen(self):
-        self.socket.bind((self.args.target, self.args.port))
+        self.socket.bind((self.args.address, self.args.port))
         self.socket.listen(5)
 
         while True:
