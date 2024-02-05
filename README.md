@@ -118,9 +118,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 - [ ] Password Hash Cracker
 - [ ] Archive Password Cracker
-
-
-# License
-
-This project is licensed under the MIT license
-
