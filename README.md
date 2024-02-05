@@ -1,10 +1,64 @@
-# PixelToolkit
+# Pixel Toolkit
 
-PixelToolkit project is meant to be simple set of tools for ethical hackers.
-Our toolkit offers fully functional graphical user interface and command line interface for every module currently available.
+![Tkinter](https://img.shields.io/badge/-Tkinter-blue?style=for-the-badge&logo=python&logoColor=white)
+![Hashlib](https://img.shields.io/badge/-Hashlib-blue?style=for-the-badge&logo=python&logoColor=white)
+![IP Address](https://img.shields.io/badge/-IPAddress-blue?style=for-the-badge&logo=python&logoColor=white)
+![RE](https://img.shields.io/badge/-RE-blue?style=for-the-badge&logo=python&logoColor=white)
+![Requests](https://img.shields.io/badge/-Requests-blue?style=for-the-badge&logo=python&logoColor=white)
+![Shlex](https://img.shields.io/badge/-Shlex-blue?style=for-the-badge&logo=python&logoColor=white)
+![Subprocess](https://img.shields.io/badge/-Subprocess-blue?style=for-the-badge&logo=python&logoColor=white)
+[![Python](https://img.shields.io/badge/-Python-black?style=for-the-badge&logo=python&logoColor=white)](https://docs.python.org/3/library/module-name.html)
 
 
-## Available modules
+## Description
+
+Pixel Toolkit is a collection of utilities and modules designed for various tasks such as password generation, port scanning, web brute forcing, and more. This toolkit is built with Python and leverages libraries like `tkinter`, `hashlib`, and `os` to provide a comprehensive suite of tools for cybersecurity enthusiasts and professionals.
+
+## Features
+
+- Password Generation Module
+- Port Scanner
+- Hash Cracking
+- Remote Shell Access
+- Web Brute Forcing
+- Web Crawling
+- Wordlist Generation
+
+## Installation
+
+Clone the repository and navigate to the project directory:
+
+`git clone https://github.com/GrzegorzSzczepanek/PixelToolkit.git cd PixelToolkit`
+
+
+## Usage
+
+Run the main script to launch the Pixel Toolkit:
+
+`python main.py`
+
+
+## Modules
+
+- `gui.py`: Provides the graphical user interface for the toolkit.
+- `hash.py`: Handles hashing operations.
+- `hash_crack.py`: Provides functionality for cracking hashes.
+- `pass_gen.py`: Includes a password generator module.
+- `port_scanner.py`: Allows for port scanning.
+- `remote_shell.py`: Facilitates remote shell access.
+- `web_bruteforcer.py`: Offers web brute forcing capabilities.
+- `web_crawler.py`: Supports web crawling operations.
+- `wordlist_generator.py`: Helps in generating wordlists.
+
+## Contributing
+
+If you'd like to contribute to the project, please fork the repository and submit a pull request.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Modules in use
 
 ### Password Generator (GUI)
 ![Screenshot from 2023-10-13 15-13-48](https://github.com/GrzegorzSzczepanek/PixelToolkit/assets/113286903/aa023d93-b2ed-4668-875d-4e8bc0f36295)
